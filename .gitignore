@@ -58,3 +58,5 @@ external/*
 *.user
 *.opendb
 *.db
+*.iobj
+*.ipdb
