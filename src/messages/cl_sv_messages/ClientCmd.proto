@@ -1,0 +1,6 @@
+package cl_sv_messages;
+
+message ClientCmd
+{
+	required string command = 1;
+}

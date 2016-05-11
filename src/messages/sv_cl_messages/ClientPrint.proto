@@ -1,0 +1,12 @@
+package sv_cl_messages;
+
+message ClientPrint
+{
+	enum Type
+	{
+		CONSOLE = 0;
+	}
+	
+	required Type type = 1;
+	required string message = 2;
+}

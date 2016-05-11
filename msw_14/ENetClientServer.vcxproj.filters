@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\utility">
+      <UniqueIdentifier>{4e3a36a5-c02e-4d22-bb75-b381968f3b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utility">
+      <UniqueIdentifier>{58fd2910-1d9c-4de0-b7ed-4fee90464431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\messages">
+      <UniqueIdentifier>{97545a37-8c71-45df-a12b-aae385468d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\messages\cl_sv_messages">
+      <UniqueIdentifier>{65bc711f-e9e2-4aee-8af8-820d81d45c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\messages">
+      <UniqueIdentifier>{a668556f-e950-49b4-9443-edd9c39755b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\messages\cl_sv_messages">
+      <UniqueIdentifier>{bea9ad4a-cbb2-441e-8bfa-54bd9f2cd896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\messages\sv_cl_messages">
+      <UniqueIdentifier>{756534a5-0eeb-40a8-9ecb-b031685b01cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\messages\sv_cl_messages">
+      <UniqueIdentifier>{33a3ee0e-7f80-4c1c-8300-c49b5346e7f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CNetworkBuffer.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CSVClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc">
+      <Filter>Source Files\messages\cl_sv_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CCLServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc">
+      <Filter>Source Files\messages\sv_cl_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\utility\CNetworkBuffer.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CSVClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NetworkConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h">
+      <Filter>Header Files\messages\cl_sv_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CCLServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h">
+      <Filter>Header Files\messages\sv_cl_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
