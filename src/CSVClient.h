@@ -1,11 +1,17 @@
 #ifndef CSVCLIENT_H
 #define CSVCLIENT_H
 
+#include <cstdint>
+
 #include <enet/enet.h>
+
+#include <google/protobuf/message.h>
 
 #include "NetworkConstants.h"
 
-class CNetworkBuffer;
+#include "utility/CNetworkBuffer.h"
+
+#undef SendMessage
 
 class CServer;
 
@@ -29,7 +35,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CSVClient() = default;
+	CSVClient();
 
 	/**
 	*	Destructor.
@@ -57,6 +63,16 @@ public:
 	ENetPeer* GetPeer() const { return m_pPeer; }
 
 	/**
+	*	@return The reliable message buffer.
+	*/
+	const CNetworkBuffer& GetMessageBuffer() const { return m_MessageBuffer; }
+
+	/**
+	*	@copydoc GetMessageBuffer() const
+	*/
+	CNetworkBuffer& GetMessageBuffer() { return m_MessageBuffer; }
+
+	/**
 	*	Called when a client has connected and this client object has been assigned to it.
 	*	@param pPeer Peer to associate with this client.
 	*/
@@ -71,6 +87,21 @@ public:
 	*	Called when this client has disconnected.
 	*/
 	void Reset();
+
+	/**
+	*	Sends a message to this client.
+	*	@param messageId ID of the message to send.
+	*	@param message Message to send.
+	*	@return true on success, false otherwise.
+	*/
+	bool SendMessage( const SVCLMessage messageId, google::protobuf::Message& message );
+
+	/**
+	*	Sends a message to this client.
+	*	@param buffer Buffer containing the message.
+	*	@return true on success, false otherwise.
+	*/
+	bool SendMessage( const CNetworkBuffer& buffer );
 
 	/**
 	*	Process messages sent by this client.
@@ -90,6 +121,10 @@ private:
 	SVClientConnState m_State = SVClientConnState::FREE;
 
 	ENetPeer* m_pPeer = nullptr;
+
+	uint8_t m_MessageBufData[ MAX_DATAGRAM ];
+
+	CNetworkBuffer m_MessageBuffer;
 
 private:
 	CSVClient( const CSVClient& ) = delete;

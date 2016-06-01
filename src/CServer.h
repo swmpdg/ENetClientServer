@@ -57,7 +57,7 @@ public:
 	*	@param message Message to send.
 	*	@return true on success, false otherwise.
 	*/
-	bool SendMessage( const SVCLMessage messageId, google::protobuf::Message& message );
+	bool SendBroadcastMessage( const SVCLMessage messageId, google::protobuf::Message& message );
 
 private:
 
@@ -72,6 +72,11 @@ private:
 	*	@param pPacket Packet to process.
 	*/
 	void ProcessPacket( CSVClient& client, ENetPacket* pPacket );
+
+	/**
+	*	Dispatch pending messages to all clients.
+	*/
+	void DispatchClientMessages();
 
 private:
 	bool m_bInitialized = false;

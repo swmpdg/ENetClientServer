@@ -66,6 +66,15 @@
     <ClCompile Include="..\src\CGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\utility\CNetBufOutputStream.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\NetworkUtils.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CNetBufInputStream.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\utility\CNetworkBuffer.h">
@@ -94,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="..\src\CGame.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CNetBufInputStream.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CNetBufOutputStream.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\NetworkUtils.h">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

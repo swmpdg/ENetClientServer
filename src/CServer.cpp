@@ -6,6 +6,8 @@
 
 #include "utility/CNetworkBuffer.h"
 
+#include "utility/NetworkUtils.h"
+
 #include "CSVClient.h"
 
 #include "CServer.h"
@@ -71,36 +73,18 @@ void CServer::Shutdown()
 void CServer::RunFrame()
 {
 	ProcessNetworkEvents();
+
+	DispatchClientMessages();
 }
 
-bool CServer::SendMessage( const SVCLMessage messageId, google::protobuf::Message& message )
+bool CServer::SendBroadcastMessage( const SVCLMessage messageId, google::protobuf::Message& message )
 {
-	uint8_t szBuffer[ 80000 ];
+	uint8_t szBuffer[ MAX_DATAGRAM ];
 
-	CNetworkBuffer buffer( "CL_Send_Buffer", szBuffer, sizeof( szBuffer ) );
+	CNetworkBuffer buffer( "CServer::SendBroadcastMessage_Buffer", szBuffer, sizeof( szBuffer ) );
 
-	buffer.WriteByte( static_cast<int>( messageId ) );
-
-	const size_t messageSize = message.ByteSize();
-
-	buffer.WriteUnsignedBitLong( messageSize, 32 );
-
-	//TODO: avoid memory allocation.
-	auto messageBuf = std::make_unique<uint8_t[]>( messageSize );
-
-	if( !message.SerializeToArray( messageBuf.get(), messageSize ) )
-	{
-		printf( "Failed to serialize message\n" );
+	if( !SerializeToBuffer( messageId, message, buffer ) )
 		return false;
-	}
-
-	buffer.WriteBytes( messageBuf.get(), messageSize );
-
-	if( buffer.HasOverflowed() )
-	{
-		printf( "Message buffer overflowed\n" );
-		return false;
-	}
 
 	bool bSuccess = true;
 
@@ -110,10 +94,7 @@ bool CServer::SendMessage( const SVCLMessage messageId, google::protobuf::Messag
 
 		if( client.IsFullyConnected() )
 		{
-			//TODO: this should be appending reliable messages to the client's buffer, and then send it all at once.
-			ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
-
-			bSuccess = enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) == 0 && bSuccess;
+			bSuccess = client.SendMessage( buffer ) && bSuccess;
 		}
 	}
 
@@ -201,4 +182,26 @@ void CServer::ProcessPacket( CSVClient& client, ENetPacket* pPacket )
 	CNetworkBuffer buffer{ "SV_Packet", pPacket->data, pPacket->dataLength };
 
 	client.ProcessMessages( *this, buffer );
+}
+
+void CServer::DispatchClientMessages()
+{
+	for( size_t uiIndex = 0; uiIndex < m_uiMaxClients; ++uiIndex )
+	{
+		auto& client = m_pClients[ uiIndex ];
+
+		if( client.IsFullyConnected() )
+		{
+			auto& buffer = client.GetMessageBuffer();
+
+			ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
+
+			buffer.ResetToStart();
+
+			if( enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) != 0 )
+			{
+				printf( "Error while sending packet to client!\n" );
+			}
+		}
+	}
 }

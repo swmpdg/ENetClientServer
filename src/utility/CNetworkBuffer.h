@@ -110,10 +110,15 @@ public:
 	bool WriteBytes( const void* pData, const size_t uiNumBytes );
 	bool WriteString( const char* pszString );
 
-	/**
-	*	Bytes were written through external means.
-	*/
-	void ExternalWritten( const size_t uiNumbits );
+	bool PadToByte();
+
+	bool ExternalBitsWritten( const size_t uiBits );
+
+	bool ExternalBytesWritten( const size_t uiBytes );
+
+	bool BackUpBits( const size_t uiBits );
+
+	bool BackUpBytes( const size_t uiBytes );
 
 	/*
 	* Read methods

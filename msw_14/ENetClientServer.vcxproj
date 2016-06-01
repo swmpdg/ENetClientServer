@@ -99,7 +99,10 @@
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
+    <ClCompile Include="..\src\utility\CNetBufInputStream.cpp" />
+    <ClCompile Include="..\src\utility\CNetBufOutputStream.cpp" />
     <ClCompile Include="..\src\utility\CNetworkBuffer.cpp" />
+    <ClCompile Include="..\src\utility\NetworkUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CClient.h" />
@@ -110,7 +113,10 @@
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
     <ClInclude Include="..\src\NetworkConstants.h" />
+    <ClInclude Include="..\src\utility\CNetBufInputStream.h" />
+    <ClInclude Include="..\src\utility\CNetBufOutputStream.h" />
     <ClInclude Include="..\src\utility\CNetworkBuffer.h" />
+    <ClInclude Include="..\src\utility\NetworkUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

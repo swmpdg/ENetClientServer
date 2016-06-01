@@ -1,6 +1,9 @@
 #include <cassert>
+#include <memory>
 
 #include "utility/CNetworkBuffer.h"
+
+#include "utility/NetworkUtils.h"
 
 #include "CServer.h"
 
@@ -8,6 +11,11 @@
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
 
 #include "CSVClient.h"
+
+CSVClient::CSVClient()
+	: m_MessageBuffer( "ServerClientMessage", m_MessageBufData, sizeof( m_MessageBufData ) )
+{
+}
 
 CSVClient::~CSVClient()
 {
@@ -26,6 +34,8 @@ void CSVClient::Initialize( ENetPeer* pPeer )
 	m_State = SVClientConnState::CONNECTING;
 
 	m_pPeer->data = this;
+
+	m_MessageBuffer.ResetToStart();
 }
 
 void CSVClient::Connected()
@@ -48,6 +58,16 @@ void CSVClient::Reset()
 	m_State = SVClientConnState::FREE;
 }
 
+bool CSVClient::SendMessage( const SVCLMessage messageId, google::protobuf::Message& message )
+{
+	return SerializeToBuffer( messageId, message, m_MessageBuffer );
+}
+
+bool CSVClient::SendMessage( const CNetworkBuffer& buffer )
+{
+	return m_MessageBuffer.WriteBits( buffer.GetData(), buffer.GetBitsInBuffer() );
+}
+
 void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )
 {
 	CLSVMessage message;
@@ -59,7 +79,7 @@ void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )
 			break;
 		}
 
-		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( 32 );
+		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( NETMSG_SIZE_BITS );
 
 		ProcessMessage( server, message, uiMessageSize, buffer );
 	}
@@ -91,7 +111,7 @@ void CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 
 			print.set_message( "Message received\n" );
 
-			server.SendMessage( SVCLMessage::CLIENTPRINT, print );
+			server.SendBroadcastMessage( SVCLMessage::CLIENTPRINT, print );
 
 			break;
 		}

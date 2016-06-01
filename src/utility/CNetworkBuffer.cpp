@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <cstdio>
 
@@ -154,7 +155,7 @@ void CNetworkBuffer::WriteSignedBitLong( int iValue, const size_t uiNumBits )
 
 bool CNetworkBuffer::WriteBits( const void* pData, const size_t uiNumBits )
 {
-	uint8_t* pOut = ( uint8_t* ) pData;
+	auto pOut = ( const uint8_t* ) pData;
 	size_t uiBitsLeft = uiNumBits;
 
 	// get output dword-aligned.
@@ -169,7 +170,7 @@ bool CNetworkBuffer::WriteBits( const void* pData, const size_t uiNumBits )
 	// read dwords.
 	while( uiBitsLeft >= 32 )
 	{
-		WriteUnsignedBitLong( *( ( unsigned int* ) pOut ), 32 );
+		WriteUnsignedBitLong( *( ( const unsigned int* ) pOut ), 32 );
 
 		pOut += sizeof( unsigned int );
 		uiBitsLeft -= 32;
@@ -249,6 +250,45 @@ bool CNetworkBuffer::WriteString( const char* pszString )
 		WriteChar( 0 );
 
 	return !m_fOverflowed;
+}
+
+bool CNetworkBuffer::PadToByte()
+{
+	if( ( m_uiCurrentBit % 8 ) != 0 )
+	{
+		m_uiCurrentBit += m_uiCurrentBit % 8;
+
+		return !HasOverflowed();
+	}
+
+	return true;
+}
+
+bool CNetworkBuffer::ExternalBitsWritten( const size_t uiBits )
+{
+	if( CheckOverflow( uiBits ) )
+		return false;
+
+	m_uiCurrentBit += uiBits;
+
+	return true;
+}
+
+bool CNetworkBuffer::ExternalBytesWritten( const size_t uiBytes )
+{
+	return ExternalBitsWritten( ByteBit( uiBytes ) );
+}
+
+bool CNetworkBuffer::BackUpBits( const size_t uiBits )
+{
+	m_uiCurrentBit -= std::min( m_uiCurrentBit, uiBits );
+
+	return true;
+}
+
+bool CNetworkBuffer::BackUpBytes( const size_t uiBytes )
+{
+	return BackUpBits( ByteBit( uiBytes ) );
 }
 
 int CNetworkBuffer::ReadOneBit()

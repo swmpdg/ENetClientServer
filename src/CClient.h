@@ -5,6 +5,8 @@
 
 #include <google/protobuf/message.h>
 
+#include "utility/CNetworkBuffer.h"
+
 #include "CCLServer.h"
 
 //Windows define
@@ -27,7 +29,7 @@ public:
 	~CClient();
 
 	/**
-	*	@return Whether this client is initializated.
+	*	@return Whether this client is initialized.
 	*/
 	bool IsInitialized() const { return m_bInitialized; }
 
@@ -86,6 +88,11 @@ private:
 	*	@param pPacket Packet to process.
 	*/
 	void ProcessPacket( CCLServer& server, ENetPacket* pPacket );
+
+	/**
+	*	Dispatches messages to the server.
+	*/
+	void DispatchServerMessages();
 
 private:
 	bool m_bInitialized = false;

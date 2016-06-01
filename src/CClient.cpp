@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "utility/CNetworkBuffer.h"
+#include "utility/NetworkUtils.h"
 
 #include "CClient.h"
 
@@ -73,48 +73,22 @@ void CClient::DisconnectFromServer()
 	}
 
 	enet_peer_disconnect( m_Server.GetPeer(), CLDisconnectCode::USER_DISCONNECTED );
+
+	m_Server.PendingDisconnect();
 }
 
 bool CClient::SendMessage( const CLSVMessage messageId, google::protobuf::Message& message )
 {
 	assert( IsConnected() );
 
-	uint8_t szBuffer[ 80000 ];
-
-	CNetworkBuffer buffer( "CL_Send_Buffer", szBuffer, sizeof( szBuffer ) );
-
-	buffer.WriteByte( static_cast<int>( messageId ) );
-
-	const size_t messageSize = message.ByteSize();
-
-	buffer.WriteUnsignedBitLong( messageSize, 32 );
-
-	//TODO: avoid memory allocation.
-	auto messageBuf = std::make_unique<uint8_t[]>( messageSize );
-
-	if( !message.SerializeToArray( messageBuf.get(), messageSize ) )
-	{
-		printf( "Failed to serialize message\n" );
-		return false;
-	}
-
-	buffer.WriteBytes( messageBuf.get(), messageSize );
-
-	if( buffer.HasOverflowed() )
-	{
-		printf( "Message buffer overflowed\n" );
-		return false;
-	}
-
-	//TODO: this should be appending reliable messages to the server buffer, and then send it all at once.
-	ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
-
-	return enet_peer_send( m_Server.GetPeer(), NetChannel::DATA, pPacket ) == 0;
+	return m_Server.SendMessage( messageId, message );
 }
 
 void CClient::RunFrame()
 {
 	ProcessNetworkEvents();
+
+	DispatchServerMessages();
 }
 
 void CClient::ProcessNetworkEvents()
@@ -169,7 +143,24 @@ void CClient::ProcessPacket( CCLServer& server, ENetPacket* pPacket )
 {
 	assert( pPacket );
 
-	CNetworkBuffer buffer{ "CL_Packet", pPacket->data, pPacket->dataLength };
+	CNetworkBuffer buffer{ "CClient::ProcessPacket_Buffer", pPacket->data, pPacket->dataLength };
 
 	server.ProcessMessages( buffer );
+}
+
+void CClient::DispatchServerMessages()
+{
+	if( m_Server.IsFullyConnected() )
+	{
+		auto& buffer = m_Server.GetMessageBuffer();
+
+		ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
+
+		buffer.ResetToStart();
+
+		if( enet_peer_send( m_Server.GetPeer(), NetChannel::DATA, pPacket ) != 0 )
+		{
+			printf( "Error while sending packet to server!\n" );
+		}
+	}
 }

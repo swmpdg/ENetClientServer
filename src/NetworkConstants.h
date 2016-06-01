@@ -109,4 +109,14 @@ enum class SVCLMessage : uint8_t
 	CLIENTPRINT,
 };
 
+/**
+*	Maximum amount of data that can be stored in a buffer at any point in time.
+*/
+const size_t MAX_DATAGRAM = 80000;
+
+/**
+*	Number of bits used to represent the size parameter of a network message.
+*/
+const size_t NETMSG_SIZE_BITS = 32;
+
 #endif //NETWORKCONSTANTS_H

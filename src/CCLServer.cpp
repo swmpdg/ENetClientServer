@@ -2,9 +2,16 @@
 
 #include "utility/CNetworkBuffer.h"
 
+#include "utility/NetworkUtils.h"
+
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
 
 #include "CCLServer.h"
+
+CCLServer::CCLServer()
+	: m_MessageBuffer( "ClientServerData", m_MessageBufData, sizeof( m_MessageBufData ) )
+{
+}
 
 CCLServer::~CCLServer()
 {
@@ -22,6 +29,8 @@ void CCLServer::Initialize( ENetPeer* pPeer )
 	m_State = CLServerConnState::CONNECTING;
 
 	m_pPeer->data = this;
+
+	m_MessageBuffer.ResetToStart();
 }
 
 void CCLServer::Connected()
@@ -29,6 +38,13 @@ void CCLServer::Connected()
 	assert( m_State == CLServerConnState::CONNECTING );
 
 	m_State = CLServerConnState::CONNECTED;
+}
+
+void CCLServer::PendingDisconnect()
+{
+	assert( m_State == CLServerConnState::CONNECTING || m_State == CLServerConnState::CONNECTED );
+
+	m_State = CLServerConnState::PENDINGDISCONNECT;
 }
 
 void CCLServer::Reset()
@@ -52,13 +68,21 @@ void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
 	{
 		if( buffer.HasOverflowed() )
 		{
+			printf( "CCLServer::ProcessMessages: Overflowed while reading from buffer!\n" );
 			break;
 		}
 
-		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( 32 );
+		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( NETMSG_SIZE_BITS );
 
 		ProcessMessage( message, uiMessageSize, buffer );
 	}
+}
+
+bool CCLServer::SendMessage( const CLSVMessage messageId, google::protobuf::Message& message )
+{
+	assert( IsFullyConnected() );
+
+	return SerializeToBuffer( messageId, message, m_MessageBuffer );
 }
 
 void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
@@ -87,6 +111,12 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 				}
 			}
 
+			break;
+		}
+
+	default:
+		{
+			printf( "CCLServer::ProcessMessage: Invalid message %d\n", message );
 			break;
 		}
 	}

@@ -1,11 +1,15 @@
 #ifndef CCLSERVER_H
 #define CCLSERVER_H
 
+#include <cstdint>
+
 #include <enet/enet.h>
 
 #include "NetworkConstants.h"
 
-class CNetworkBuffer;
+#include "utility/CNetworkBuffer.h"
+
+#undef SendMessage
 
 /**
 *	The client's server's connection state.
@@ -27,7 +31,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CCLServer() = default;
+	CCLServer();
 
 	/**
 	*	Destructor.
@@ -55,6 +59,16 @@ public:
 	ENetPeer* GetPeer() const { return m_pPeer; }
 
 	/**
+	*	@return The reliable message buffer.
+	*/
+	const CNetworkBuffer& GetMessageBuffer() const { return m_MessageBuffer; }
+
+	/**
+	*	@copydoc GetMessageBuffer() const
+	*/
+	CNetworkBuffer& GetMessageBuffer() { return m_MessageBuffer; }
+
+	/**
 	*	Initializes this server handler.
 	*	@param pPeer Peer to associate with this server.
 	*/
@@ -66,6 +80,11 @@ public:
 	void Connected();
 
 	/**
+	*	Called when the client has issued a disconnect and is awaiting disconnect.
+	*/
+	void PendingDisconnect();
+
+	/**
 	*	Resets this server handler to defaults.
 	*/
 	void Reset();
@@ -74,6 +93,14 @@ public:
 	*	Processes messages sent by this server to the local client.
 	*/
 	void ProcessMessages( CNetworkBuffer& buffer );
+
+	/**
+	*	Sends a message to the server.
+	*	@param messageId Message ID.
+	*	@param message Message to send.
+	*	@return true on success, false otherwise.
+	*/
+	bool SendMessage( const CLSVMessage messageId, google::protobuf::Message& message );
 
 private:
 
@@ -89,6 +116,10 @@ private:
 	CLServerConnState m_State = CLServerConnState::NOTCONNECTED;
 
 	ENetPeer* m_pPeer = nullptr;
+
+	uint8_t m_MessageBufData[ MAX_DATAGRAM ];
+
+	CNetworkBuffer m_MessageBuffer;
 
 private:
 	CCLServer( const CCLServer& ) = delete;
