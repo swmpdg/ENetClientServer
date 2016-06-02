@@ -107,6 +107,11 @@ enum class SVCLMessage : uint8_t
 	*	Message to be printed.
 	*/
 	CLIENTPRINT,
+
+	/**
+	*	Network string table message.
+	*/
+	NETTABLE,
 };
 
 /**

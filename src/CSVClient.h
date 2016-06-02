@@ -15,6 +15,8 @@
 
 class CServer;
 
+class CServerNetworkStringTableManager;
+
 /**
 *	The server's client's connection state.
 */
@@ -73,6 +75,36 @@ public:
 	CNetworkBuffer& GetMessageBuffer() { return m_MessageBuffer; }
 
 	/**
+	*	@return Whether this client has received all net tables or not.
+	*/
+	bool HasNetTables() const { return m_bHasNetTables; }
+
+	/**
+	*	Sets whether this client has received all net tables or not.
+	*	@see HasNetTables() const
+	*/
+	void SetHasNetTables( const bool bHasNetTables )
+	{
+		m_bHasNetTables = bHasNetTables;
+	}
+
+	/**
+	*	@return The last time we sent a message to this client.
+	*/
+	float GetLastMessageTime() const { return m_flLastMessageTime; }
+
+	/**
+	*	Sets the last time we sent a message to the client.
+	*	@see GetLastMessageTime() const
+	*/
+	void SetLastMessageTime( const float flLastMessageTime )
+	{
+		m_flLastMessageTime = flLastMessageTime;
+	}
+
+	float GetLastNetTableTime() const { return m_flLastNetTableTime; }
+
+	/**
 	*	Called when a client has connected and this client object has been assigned to it.
 	*	@param pPeer Peer to associate with this client.
 	*/
@@ -104,6 +136,11 @@ public:
 	bool SendMessage( const CNetworkBuffer& buffer );
 
 	/**
+	*	Send network string table updates to the client.
+	*/
+	void SendNetTableUpdates( CServerNetworkStringTableManager& manager );
+
+	/**
 	*	Process messages sent by this client.
 	*/
 	void ProcessMessages( CServer& server, CNetworkBuffer& buffer );
@@ -125,6 +162,12 @@ private:
 	uint8_t m_MessageBufData[ MAX_DATAGRAM ];
 
 	CNetworkBuffer m_MessageBuffer;
+
+	bool m_bHasNetTables = false;
+
+	float m_flLastMessageTime = 0;
+
+	float m_flLastNetTableTime = 0;
 
 private:
 	CSVClient( const CSVClient& ) = delete;

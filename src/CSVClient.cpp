@@ -5,12 +5,18 @@
 
 #include "utility/NetworkUtils.h"
 
+#include "utility/CWorldTime.h"
+
 #include "CServer.h"
+
+#include "CServerNetworkStringtableManager.h"
 
 #include "messages/cl_sv_messages/ClientCmd.pb.h"
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
 
 #include "CSVClient.h"
+
+#undef GetCurrentTime
 
 CSVClient::CSVClient()
 	: m_MessageBuffer( "ServerClientMessage", m_MessageBufData, sizeof( m_MessageBufData ) )
@@ -36,6 +42,12 @@ void CSVClient::Initialize( ENetPeer* pPeer )
 	m_pPeer->data = this;
 
 	m_MessageBuffer.ResetToStart();
+
+	m_bHasNetTables = false;
+
+	m_flLastMessageTime = 0;
+
+	m_flLastNetTableTime = 0;
 }
 
 void CSVClient::Connected()
@@ -56,6 +68,12 @@ void CSVClient::Reset()
 	m_pPeer = nullptr;
 
 	m_State = SVClientConnState::FREE;
+
+	m_bHasNetTables = false;
+
+	m_flLastMessageTime = 0;
+
+	m_flLastNetTableTime = 0;
 }
 
 bool CSVClient::SendMessage( const SVCLMessage messageId, google::protobuf::Message& message )
@@ -66,6 +84,23 @@ bool CSVClient::SendMessage( const SVCLMessage messageId, google::protobuf::Mess
 bool CSVClient::SendMessage( const CNetworkBuffer& buffer )
 {
 	return m_MessageBuffer.WriteBits( buffer.GetData(), buffer.GetBitsInBuffer() );
+}
+
+void CSVClient::SendNetTableUpdates( CServerNetworkStringTableManager& manager )
+{
+	const bool bHadNetTables = HasNetTables();
+
+	if( !HasNetTables() )
+	{
+		//TODO: can overflow.
+		manager.WriteNetTableCreateMessages( GetMessageBuffer() );
+
+		SetHasNetTables( true );
+	}
+
+	manager.Serialize( GetMessageBuffer(), bHadNetTables ? m_flLastNetTableTime : 0 );
+
+	m_flLastNetTableTime = WorldTime.GetCurrentTime();
 }
 
 void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )

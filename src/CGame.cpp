@@ -2,9 +2,14 @@
 #include <iostream>
 #include <thread>
 
+#include "utility/CWorldTime.h"
+#include "utility/Util.h"
+
 #include "messages/cl_sv_messages/ClientCmd.pb.h"
 
 #include "CGame.h"
+
+#undef GetCurrentTime
 
 bool CGame::Initialize( const enet_uint16 uiPort )
 {
@@ -26,6 +31,9 @@ bool CGame::Initialize( const enet_uint16 uiPort )
 		printf( "Failed to start client\n" );
 		return false;
 	}
+
+	//TODO: should be somewhere else
+	m_pServerTable = m_Server.GetNetStringTableManager().CreateTable( "table" );
 
 	return true;
 }
@@ -53,10 +61,29 @@ bool CGame::Run()
 
 	std::thread ioThread( IOThread, this );
 
+	size_t uiStringOffset = 0;
+
 	while( !m_bTerminate )
 	{
+		WorldTime.TimeChanged( GetCurrentTime() );
+
 		m_Server.RunFrame();
 		m_Client.RunFrame();
+
+		if( !m_pClientTable && m_Client.IsFullyConnected() )
+		{
+			//TODO: needs a callback instead
+			m_pClientTable = m_Client.GetNetStringTableManager().CreateTable( "table" );
+
+			if( m_pClientTable )
+			{
+				printf( "Created client copy of the table\n" );
+			}
+			else
+			{
+				printf( "Couldn't create client copy of the table\n" );
+			}
+		}
 
 		if( m_IOMutex.try_lock() )
 		{
@@ -100,6 +127,10 @@ bool CGame::Run()
 				else if( m_szInput == "disconnect" && m_Client.IsConnected() )
 				{
 					m_Client.DisconnectFromServer();
+
+					m_pClientTable = nullptr;
+
+					uiStringOffset = 0;
 				}
 				else if( m_szInput == "finish" && !m_Client.IsConnected() )
 				{
@@ -107,7 +138,26 @@ bool CGame::Run()
 
 					m_bTerminate = true;
 				}
+				else if( m_szInput == "addstring" )
+				{
+					char szBuffer[ 256 ];
 
+					for( size_t uiIndex = 0; uiIndex < 100; ++uiIndex )
+					{
+						snprintf( szBuffer, sizeof( szBuffer ), "foo %u", uiStringOffset++ );
+
+						m_pServerTable->Add( szBuffer );
+					}
+				}
+				else if( m_szInput == "liststrings" )
+				{
+					printf( "Number of strings in table %s: %u\n", m_pClientTable->GetName(), m_pClientTable->GetStringCount() );
+
+					for( size_t uiIndex = 0; uiIndex < m_pClientTable->GetStringCount(); ++uiIndex )
+					{
+						printf( "String %u: %s\n", uiIndex, m_pClientTable->GetString( uiIndex ) );
+					}
+				}
 			}
 
 			m_IOMutex.unlock();

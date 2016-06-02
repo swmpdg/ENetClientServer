@@ -75,6 +75,30 @@
     <ClCompile Include="..\src\utility\CNetBufInputStream.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\utility\CNetworkStringTable.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CHashStringPool.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\Util.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CWorldTime.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CNetworkStringTableManager.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc">
+      <Filter>Source Files\messages\sv_cl_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CServerNetworkStringtableManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CClientNetworkStringTableManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\utility\CNetworkBuffer.h">
@@ -112,6 +136,36 @@
     </ClInclude>
     <ClInclude Include="..\src\utility\NetworkUtils.h">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CNetworkStringTable.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CAutoString.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CHashStringPool.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\StringUtils.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\Util.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CWorldTime.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CNetworkStringTableManager.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h">
+      <Filter>Header Files\messages\sv_cl_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CServerNetworkStringtableManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CClientNetworkStringTableManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

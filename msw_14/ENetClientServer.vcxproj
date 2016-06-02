@@ -54,7 +54,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ObjectFileName>$(IntDir)/$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -75,7 +75,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ObjectFileName>$(IntDir)/$(IntDir)/%(RelativeDir)/</ObjectFileName>
       <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -92,31 +92,49 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CClient.cpp" />
+    <ClCompile Include="..\src\CClientNetworkStringTableManager.cpp" />
     <ClCompile Include="..\src\CCLServer.cpp" />
     <ClCompile Include="..\src\CGame.cpp" />
     <ClCompile Include="..\src\CServer.cpp" />
+    <ClCompile Include="..\src\CServerNetworkStringtableManager.cpp" />
     <ClCompile Include="..\src\CSVClient.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
+    <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc" />
+    <ClCompile Include="..\src\utility\CHashStringPool.cpp" />
     <ClCompile Include="..\src\utility\CNetBufInputStream.cpp" />
     <ClCompile Include="..\src\utility\CNetBufOutputStream.cpp" />
     <ClCompile Include="..\src\utility\CNetworkBuffer.cpp" />
+    <ClCompile Include="..\src\utility\CNetworkStringTable.cpp" />
+    <ClCompile Include="..\src\utility\CNetworkStringTableManager.cpp" />
+    <ClCompile Include="..\src\utility\CWorldTime.cpp" />
     <ClCompile Include="..\src\utility\NetworkUtils.cpp" />
+    <ClCompile Include="..\src\utility\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CClient.h" />
+    <ClInclude Include="..\src\CClientNetworkStringTableManager.h" />
     <ClInclude Include="..\src\CCLServer.h" />
     <ClInclude Include="..\src\CGame.h" />
     <ClInclude Include="..\src\CServer.h" />
+    <ClInclude Include="..\src\CServerNetworkStringtableManager.h" />
     <ClInclude Include="..\src\CSVClient.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
+    <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h" />
     <ClInclude Include="..\src\NetworkConstants.h" />
+    <ClInclude Include="..\src\utility\CAutoString.h" />
+    <ClInclude Include="..\src\utility\CHashStringPool.h" />
     <ClInclude Include="..\src\utility\CNetBufInputStream.h" />
     <ClInclude Include="..\src\utility\CNetBufOutputStream.h" />
     <ClInclude Include="..\src\utility\CNetworkBuffer.h" />
+    <ClInclude Include="..\src\utility\CNetworkStringTable.h" />
+    <ClInclude Include="..\src\utility\CNetworkStringTableManager.h" />
+    <ClInclude Include="..\src\utility\CWorldTime.h" />
     <ClInclude Include="..\src\utility\NetworkUtils.h" />
+    <ClInclude Include="..\src\utility\StringUtils.h" />
+    <ClInclude Include="..\src\utility\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

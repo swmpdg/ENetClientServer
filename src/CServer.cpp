@@ -8,9 +8,16 @@
 
 #include "utility/NetworkUtils.h"
 
+#include "utility/CWorldTime.h"
+
 #include "CSVClient.h"
 
 #include "CServer.h"
+
+CServer::CServer()
+	: m_NetStringTableManager( this )
+{
+}
 
 CServer::~CServer()
 {
@@ -44,6 +51,8 @@ void CServer::Shutdown()
 
 	m_bInitialized = false;
 
+	m_NetStringTableManager.Clear();
+
 	if( m_pClients )
 	{
 		for( size_t uiIndex = 0; uiIndex < m_uiMaxClients; ++uiIndex )
@@ -73,6 +82,8 @@ void CServer::Shutdown()
 void CServer::RunFrame()
 {
 	ProcessNetworkEvents();
+
+	SendNetTables();
 
 	DispatchClientMessages();
 }
@@ -184,6 +195,19 @@ void CServer::ProcessPacket( CSVClient& client, ENetPacket* pPacket )
 	client.ProcessMessages( *this, buffer );
 }
 
+void CServer::SendNetTables()
+{
+	for( size_t uiIndex = 0; uiIndex < m_uiMaxClients; ++uiIndex )
+	{
+		auto& client = m_pClients[ uiIndex ];
+
+		if( client.IsFullyConnected() )
+		{
+			client.SendNetTableUpdates( m_NetStringTableManager );
+		}
+	}
+}
+
 void CServer::DispatchClientMessages()
 {
 	for( size_t uiIndex = 0; uiIndex < m_uiMaxClients; ++uiIndex )
@@ -198,7 +222,11 @@ void CServer::DispatchClientMessages()
 
 			buffer.ResetToStart();
 
-			if( enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) != 0 )
+			if( enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) == 0 )
+			{
+				client.SetLastMessageTime( WorldTime.GetCurrentTime() );
+			}
+			else
 			{
 				printf( "Error while sending packet to client!\n" );
 			}

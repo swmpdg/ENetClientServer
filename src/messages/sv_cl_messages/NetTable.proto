@@ -1,0 +1,22 @@
+package sv_cl_messages;
+
+message NetTable
+{
+	enum Command
+	{
+		CREATE = 0;
+		CLEAR = 1;
+		UPDATE = 2;
+	}
+	
+	required Command command = 1;
+	
+	oneof oneof_tableID
+	{
+		string name = 2; //Only used by CREATE.
+		uint32 tableID = 3;
+	}
+	
+	//Used by UPDATE.
+	optional bytes data = 4;
+}

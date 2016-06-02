@@ -80,6 +80,11 @@ public:
 	*/
 	bool Overflow( const size_t uiBits );
 
+	/**
+	*	Clears the overflow flag if it was set.
+	*/
+	void ClearOverflow();
+
 	/*
 	* Write methods
 	*/

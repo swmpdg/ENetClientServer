@@ -82,6 +82,12 @@ bool CNetworkBuffer::Overflow( const size_t uiBits )
 	return m_fOverflowed;
 }
 
+void CNetworkBuffer::ClearOverflow()
+{
+	if( m_fOverflowed )
+		m_fOverflowed = false;
+}
+
 void CNetworkBuffer::WriteOneBit( const int iValue )
 {
 	if( Overflow( 1 ) )
@@ -266,7 +272,7 @@ bool CNetworkBuffer::PadToByte()
 
 bool CNetworkBuffer::ExternalBitsWritten( const size_t uiBits )
 {
-	if( CheckOverflow( uiBits ) )
+	if( Overflow( uiBits ) )
 		return false;
 
 	m_uiCurrentBit += uiBits;

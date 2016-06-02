@@ -5,6 +5,7 @@
 #include "utility/NetworkUtils.h"
 
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
+#include "messages/sv_cl_messages/NetTable.pb.h"
 
 #include "CCLServer.h"
 
@@ -58,6 +59,8 @@ void CCLServer::Reset()
 	m_pPeer = nullptr;
 
 	m_State = CLServerConnState::NOTCONNECTED;
+
+	m_NetworkStringTableManager.Clear();
 }
 
 void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
@@ -110,6 +113,17 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 					break;
 				}
 			}
+
+			break;
+		}
+
+	case SVCLMessage::NETTABLE:
+		{
+			sv_cl_messages::NetTable table;
+
+			table.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+
+			m_NetworkStringTableManager.ProcessNetTableMessage( table );
 
 			break;
 		}

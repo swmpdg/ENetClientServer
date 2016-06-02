@@ -5,17 +5,19 @@
 
 bool CNetBufInputStream::Next( const void** data, int* size )
 {
-	if( m_Buffer.GetBytesLeft() <= 0 )
+	if( m_ByteCount >= m_uiMessageSize )
 		return false;
 
-	assert( m_Buffer.GetBytesLeft() <= INT_MAX );
+	const size_t uiChunk = m_uiMessageSize - static_cast<size_t>( m_ByteCount );
 
-	if( m_Buffer.GetBytesLeft() > INT_MAX )
+	assert( uiChunk <= INT_MAX );
+
+	if( uiChunk > INT_MAX )
 		return false;
 
 	*data = m_Buffer.GetCurrentData();
 
-	*size = m_Buffer.GetBytesLeft();
+	*size = uiChunk;
 
 	m_ByteCount += *size;
 

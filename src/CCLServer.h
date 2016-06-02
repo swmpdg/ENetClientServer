@@ -9,6 +9,9 @@
 
 #include "utility/CNetworkBuffer.h"
 
+#include "utility/CNetworkStringTableManager.h"
+#include "CClientNetworkStringTableManager.h"
+
 #undef SendMessage
 
 /**
@@ -69,6 +72,11 @@ public:
 	CNetworkBuffer& GetMessageBuffer() { return m_MessageBuffer; }
 
 	/**
+	*	@return The client's network string table manager.
+	*/
+	CNetworkStringTableManager& GetNetStringTableManager() { return m_NetworkStringTableManager; }
+
+	/**
 	*	Initializes this server handler.
 	*	@param pPeer Peer to associate with this server.
 	*/
@@ -120,6 +128,8 @@ private:
 	uint8_t m_MessageBufData[ MAX_DATAGRAM ];
 
 	CNetworkBuffer m_MessageBuffer;
+
+	CClientNetworkStringTableManager m_NetworkStringTableManager;
 
 private:
 	CCLServer( const CCLServer& ) = delete;

@@ -34,6 +34,11 @@ public:
 	bool IsInitialized() const { return m_bInitialized; }
 
 	/**
+	*	@return The client's network string table manager.
+	*/
+	CNetworkStringTableManager& GetNetStringTableManager() { return m_Server.GetNetStringTableManager(); }
+
+	/**
 	*	Called when the client first starts. Initializes the network connection.
 	*	@return true on success, false otherwise.
 	*/
@@ -45,9 +50,14 @@ public:
 	void Shutdown();
 
 	/**
-	*	Returns whether the client is connected to a server.
+	*	@return Whether the client is connected to a server.
 	*/
 	bool IsConnected() const { return m_Server.IsConnected(); }
+
+	/**
+	*	@return Whether the client is fully connected to a server.
+	*/
+	bool IsFullyConnected() const { return m_Server.IsFullyConnected(); }
 
 	/**
 	*	Connects to a server.

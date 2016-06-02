@@ -8,12 +8,9 @@
 class CNetBufInputStream final : public google::protobuf::io::ZeroCopyInputStream
 {
 public:
-	static const size_t DEFAULT_CHUNK_SIZE = 1024;
-
-public:
-	CNetBufInputStream( CNetworkBuffer& buffer, const size_t uiChunkSize = DEFAULT_CHUNK_SIZE )
+	CNetBufInputStream( CNetworkBuffer& buffer, const size_t uiMessageSize )
 		: m_Buffer( buffer )
-		, m_uiChunkSize( uiChunkSize > 0 ? uiChunkSize : DEFAULT_CHUNK_SIZE )
+		, m_uiMessageSize( uiMessageSize )
 	{
 		m_Buffer.PadToByte();
 	}
@@ -28,7 +25,7 @@ public:
 
 private:
 	CNetworkBuffer& m_Buffer;
-	const size_t m_uiChunkSize;
+	const size_t m_uiMessageSize;
 	google::protobuf::int64 m_ByteCount = 0;
 
 private:

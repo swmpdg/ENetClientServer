@@ -7,6 +7,9 @@
 
 #include "NetworkConstants.h"
 
+#include "utility/CNetworkStringTableManager.h"
+#include "CServerNetworkStringTableManager.h"
+
 //Windows
 #undef SendMessage
 
@@ -21,7 +24,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CServer() = default;
+	CServer();
 
 	/**
 	*	Destructor.
@@ -32,6 +35,21 @@ public:
 	*	@return Whether the server is initialized.
 	*/
 	bool IsInitialized() const { return m_bInitialized; }
+
+	/**
+	*	@return Array of clients.
+	*/
+	CSVClient* GetClients() { return m_pClients; }
+
+	/**
+	*	@return The maximum number of clients that can connect to this server.
+	*/
+	size_t GetMaxClients() const { return m_uiMaxClients; }
+
+	/**
+	*	@return The server's network string table manager.
+	*/
+	CNetworkStringTableManager& GetNetStringTableManager() { return m_NetStringTableManager; }
 
 	/**
 	*	Called when the server first starts. Initializes the network connection and the client list with the given number of clients.
@@ -74,6 +92,11 @@ private:
 	void ProcessPacket( CSVClient& client, ENetPacket* pPacket );
 
 	/**
+	*	Send network string tables to all connected clients.
+	*/
+	void SendNetTables();
+
+	/**
 	*	Dispatch pending messages to all clients.
 	*/
 	void DispatchClientMessages();
@@ -95,6 +118,8 @@ private:
 	*	Maximum number of clients.
 	*/
 	size_t m_uiMaxClients = 0;
+
+	CServerNetworkStringTableManager m_NetStringTableManager;
 
 private:
 	CServer( const CServer& ) = delete;
