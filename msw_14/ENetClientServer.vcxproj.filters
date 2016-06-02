@@ -37,46 +37,46 @@
     <Filter Include="Source Files\messages\sv_cl_messages">
       <UniqueIdentifier>{33a3ee0e-7f80-4c1c-8300-c49b5346e7f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\networking">
+      <UniqueIdentifier>{68922bc2-49aa-4784-a96e-a06dec8a8edb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\networking\stringtable">
+      <UniqueIdentifier>{37cbea75-55a5-45f5-8ba1-a60d9ca21964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\networking">
+      <UniqueIdentifier>{314afafa-bb88-4862-802a-74a3a21575af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\networking\stringtable">
+      <UniqueIdentifier>{b3e8c727-ada7-4daf-957f-6813a113b190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine">
+      <UniqueIdentifier>{1ffd5f46-960a-4e75-aba5-6950b7657bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\client">
+      <UniqueIdentifier>{0ef56e48-1269-4a1a-b478-01be9440de4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{ded97c64-2320-4d47-9b68-21b14cbb331b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\client">
+      <UniqueIdentifier>{7c987ff1-c61a-4fe3-aba4-a1b4374e22dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\server">
+      <UniqueIdentifier>{b35966d9-6cfe-469a-a05b-ae05f3c78f0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\server">
+      <UniqueIdentifier>{07f1c04d-1e08-41e4-8551-7437293507f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utility\CNetworkBuffer.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CSVClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc">
       <Filter>Source Files\messages\cl_sv_messages</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CCLServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc">
       <Filter>Source Files\messages\sv_cl_messages</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\CNetBufOutputStream.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\NetworkUtils.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\CNetBufInputStream.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utility\CNetworkStringTable.cpp">
-      <Filter>Source Files\utility</Filter>
     </ClCompile>
     <ClCompile Include="..\src\utility\CHashStringPool.cpp">
       <Filter>Source Files\utility</Filter>
@@ -87,58 +87,55 @@
     <ClCompile Include="..\src\utility\CWorldTime.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\utility\CNetworkStringTableManager.cpp">
-      <Filter>Source Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc">
       <Filter>Source Files\messages\sv_cl_messages</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CServerNetworkStringtableManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\networking\stringtable\CNetworkStringTable.cpp">
+      <Filter>Source Files\networking\stringtable</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CClientNetworkStringTableManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\networking\stringtable\CNetworkStringTableManager.cpp">
+      <Filter>Source Files\networking\stringtable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\networking\CNetBufInputStream.cpp">
+      <Filter>Source Files\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\networking\CNetBufOutputStream.cpp">
+      <Filter>Source Files\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\networking\CNetworkBuffer.cpp">
+      <Filter>Source Files\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\networking\NetworkUtils.cpp">
+      <Filter>Source Files\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\client\CClient.cpp">
+      <Filter>Source Files\engine\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\client\CClientNetworkStringTableManager.cpp">
+      <Filter>Source Files\engine\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\client\CCLServer.cpp">
+      <Filter>Source Files\engine\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\server\CServer.cpp">
+      <Filter>Source Files\engine\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\server\CServerNetworkStringtableManager.cpp">
+      <Filter>Source Files\engine\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\server\CSVClient.cpp">
+      <Filter>Source Files\engine\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\CGame.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\utility\CNetworkBuffer.h">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CSVClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\NetworkConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h">
       <Filter>Header Files\messages\cl_sv_messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CCLServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h">
       <Filter>Header Files\messages\sv_cl_messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\CNetBufInputStream.h">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\CNetBufOutputStream.h">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\NetworkUtils.h">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\utility\CNetworkStringTable.h">
-      <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\src\utility\CAutoString.h">
       <Filter>Header Files\utility</Filter>
@@ -155,17 +152,50 @@
     <ClInclude Include="..\src\utility\CWorldTime.h">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\utility\CNetworkStringTableManager.h">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h">
       <Filter>Header Files\messages\sv_cl_messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CServerNetworkStringtableManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\networking\stringtable\CNetworkStringTable.h">
+      <Filter>Header Files\networking\stringtable</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CClientNetworkStringTableManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\src\networking\stringtable\CNetworkStringTableManager.h">
+      <Filter>Header Files\networking\stringtable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\CNetBufInputStream.h">
+      <Filter>Header Files\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\CNetBufOutputStream.h">
+      <Filter>Header Files\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\CNetworkBuffer.h">
+      <Filter>Header Files\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\NetworkUtils.h">
+      <Filter>Header Files\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\client\CClient.h">
+      <Filter>Header Files\engine\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\client\CClientNetworkStringTableManager.h">
+      <Filter>Header Files\engine\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\client\CCLServer.h">
+      <Filter>Header Files\engine\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\server\CServer.h">
+      <Filter>Header Files\engine\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\server\CServerNetworkStringtableManager.h">
+      <Filter>Header Files\engine\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\server\CSVClient.h">
+      <Filter>Header Files\engine\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\NetworkConstants.h">
+      <Filter>Header Files\networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\CGame.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

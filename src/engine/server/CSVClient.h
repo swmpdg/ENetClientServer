@@ -7,9 +7,9 @@
 
 #include <google/protobuf/message.h>
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
 #undef SendMessage
 

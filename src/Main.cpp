@@ -4,9 +4,9 @@
 
 #include <google/protobuf/stubs/common.h>
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "CGame.h"
+#include "engine/CGame.h"
 
 int main( int iArgc, char* pszArgV[] )
 {

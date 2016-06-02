@@ -7,8 +7,8 @@
 
 #include <enet/enet.h>
 
-#include "CServer.h"
-#include "CClient.h"
+#include "engine/server/CServer.h"
+#include "engine/client/CClient.h"
 
 class CNetworkStringTable;
 

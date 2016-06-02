@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "utility/CNetworkStringTable.h"
+#include "networking/stringtable/CNetworkStringTable.h"
 
 class CNetworkBuffer;
 

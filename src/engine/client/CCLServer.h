@@ -5,11 +5,11 @@
 
 #include <enet/enet.h>
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "utility/CNetworkStringTableManager.h"
+#include "networking/stringtable/CNetworkStringTableManager.h"
 #include "CClientNetworkStringTableManager.h"
 
 #undef SendMessage

@@ -5,7 +5,7 @@
 
 #include <google/protobuf/message.h>
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
 #include "CCLServer.h"
 

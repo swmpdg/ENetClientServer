@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <cstdio>
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
 #include "CNetworkStringTable.h"
 

@@ -5,9 +5,9 @@
 
 #include <google/protobuf/message.h>
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "utility/CNetworkStringTableManager.h"
+#include "networking/stringtable/CNetworkStringTableManager.h"
 #include "CServerNetworkStringTableManager.h"
 
 //Windows

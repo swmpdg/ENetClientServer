@@ -2,9 +2,9 @@
 
 #include "utility/Util.h"
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "utility/CNetworkStringTable.h"
+#include "networking/stringtable/CNetworkStringTable.h"
 
 #include "CClientNetworkStringTableManager.h"
 

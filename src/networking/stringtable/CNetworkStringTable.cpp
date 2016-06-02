@@ -2,15 +2,15 @@
 #include <cassert>
 #include <cstring>
 
-#include "CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "CWorldTime.h"
+#include "utility/CWorldTime.h"
 
-#include "Util.h"
+#include "utility/Util.h"
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "NetworkUtils.h"
+#include "networking/NetworkUtils.h"
 
 #include "messages/sv_cl_messages/NetTable.pb.h"
 

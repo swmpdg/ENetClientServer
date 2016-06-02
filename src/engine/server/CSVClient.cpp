@@ -1,9 +1,9 @@
 #include <cassert>
 #include <memory>
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "utility/NetworkUtils.h"
+#include "networking/NetworkUtils.h"
 
 #include "utility/CWorldTime.h"
 

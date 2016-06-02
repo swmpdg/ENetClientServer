@@ -2,10 +2,10 @@
 
 #include "messages/sv_cl_messages/NetTable.pb.h"
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "utility/CNetworkStringTable.h"
-#include "utility/NetworkUtils.h"
+#include "networking/stringtable/CNetworkStringTable.h"
+#include "networking/NetworkUtils.h"
 
 #include "CSVClient.h"
 

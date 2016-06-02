@@ -2,11 +2,10 @@
 #include <cstdio>
 #include <memory>
 
-#include "NetworkConstants.h"
+#include "networking/NetworkConstants.h"
 
-#include "utility/CNetworkBuffer.h"
-
-#include "utility/NetworkUtils.h"
+#include "networking/CNetworkBuffer.h"
+#include "networking/NetworkUtils.h"
 
 #include "utility/CWorldTime.h"
 

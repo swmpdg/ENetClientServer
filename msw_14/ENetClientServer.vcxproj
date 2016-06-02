@@ -91,48 +91,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CClient.cpp" />
-    <ClCompile Include="..\src\CClientNetworkStringTableManager.cpp" />
-    <ClCompile Include="..\src\CCLServer.cpp" />
-    <ClCompile Include="..\src\CGame.cpp" />
-    <ClCompile Include="..\src\CServer.cpp" />
-    <ClCompile Include="..\src\CServerNetworkStringtableManager.cpp" />
-    <ClCompile Include="..\src\CSVClient.cpp" />
+    <ClCompile Include="..\src\engine\CGame.cpp" />
+    <ClCompile Include="..\src\engine\client\CClient.cpp" />
+    <ClCompile Include="..\src\engine\client\CClientNetworkStringTableManager.cpp" />
+    <ClCompile Include="..\src\engine\client\CCLServer.cpp" />
+    <ClCompile Include="..\src\engine\server\CServer.cpp" />
+    <ClCompile Include="..\src\engine\server\CServerNetworkStringtableManager.cpp" />
+    <ClCompile Include="..\src\engine\server\CSVClient.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc" />
+    <ClCompile Include="..\src\networking\CNetBufInputStream.cpp" />
+    <ClCompile Include="..\src\networking\CNetBufOutputStream.cpp" />
+    <ClCompile Include="..\src\networking\CNetworkBuffer.cpp" />
+    <ClCompile Include="..\src\networking\NetworkUtils.cpp" />
+    <ClCompile Include="..\src\networking\stringtable\CNetworkStringTable.cpp" />
+    <ClCompile Include="..\src\networking\stringtable\CNetworkStringTableManager.cpp" />
     <ClCompile Include="..\src\utility\CHashStringPool.cpp" />
-    <ClCompile Include="..\src\utility\CNetBufInputStream.cpp" />
-    <ClCompile Include="..\src\utility\CNetBufOutputStream.cpp" />
-    <ClCompile Include="..\src\utility\CNetworkBuffer.cpp" />
-    <ClCompile Include="..\src\utility\CNetworkStringTable.cpp" />
-    <ClCompile Include="..\src\utility\CNetworkStringTableManager.cpp" />
     <ClCompile Include="..\src\utility\CWorldTime.cpp" />
-    <ClCompile Include="..\src\utility\NetworkUtils.cpp" />
     <ClCompile Include="..\src\utility\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\CClient.h" />
-    <ClInclude Include="..\src\CClientNetworkStringTableManager.h" />
-    <ClInclude Include="..\src\CCLServer.h" />
-    <ClInclude Include="..\src\CGame.h" />
-    <ClInclude Include="..\src\CServer.h" />
-    <ClInclude Include="..\src\CServerNetworkStringtableManager.h" />
-    <ClInclude Include="..\src\CSVClient.h" />
+    <ClInclude Include="..\src\engine\CGame.h" />
+    <ClInclude Include="..\src\engine\client\CClient.h" />
+    <ClInclude Include="..\src\engine\client\CClientNetworkStringTableManager.h" />
+    <ClInclude Include="..\src\engine\client\CCLServer.h" />
+    <ClInclude Include="..\src\engine\server\CServer.h" />
+    <ClInclude Include="..\src\engine\server\CServerNetworkStringtableManager.h" />
+    <ClInclude Include="..\src\engine\server\CSVClient.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h" />
-    <ClInclude Include="..\src\NetworkConstants.h" />
+    <ClInclude Include="..\src\networking\CNetBufInputStream.h" />
+    <ClInclude Include="..\src\networking\CNetBufOutputStream.h" />
+    <ClInclude Include="..\src\networking\CNetworkBuffer.h" />
+    <ClInclude Include="..\src\networking\NetworkConstants.h" />
+    <ClInclude Include="..\src\networking\NetworkUtils.h" />
+    <ClInclude Include="..\src\networking\stringtable\CNetworkStringTable.h" />
+    <ClInclude Include="..\src\networking\stringtable\CNetworkStringTableManager.h" />
     <ClInclude Include="..\src\utility\CAutoString.h" />
     <ClInclude Include="..\src\utility\CHashStringPool.h" />
-    <ClInclude Include="..\src\utility\CNetBufInputStream.h" />
-    <ClInclude Include="..\src\utility\CNetBufOutputStream.h" />
-    <ClInclude Include="..\src\utility\CNetworkBuffer.h" />
-    <ClInclude Include="..\src\utility\CNetworkStringTable.h" />
-    <ClInclude Include="..\src\utility\CNetworkStringTableManager.h" />
     <ClInclude Include="..\src\utility\CWorldTime.h" />
-    <ClInclude Include="..\src\utility\NetworkUtils.h" />
     <ClInclude Include="..\src\utility\StringUtils.h" />
     <ClInclude Include="..\src\utility\Util.h" />
   </ItemGroup>

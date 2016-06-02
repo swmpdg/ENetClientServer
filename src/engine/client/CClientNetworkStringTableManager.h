@@ -1,7 +1,7 @@
 #ifndef CCLIENTNETWORKSTRINGTABLEMANAGER_H
 #define CCLIENTNETWORKSTRINGTABLEMANAGER_H
 
-#include "utility/CNetworkStringTableManager.h"
+#include "networking/stringtable/CNetworkStringTableManager.h"
 
 #include "messages/sv_cl_messages/NetTable.pb.h"
 

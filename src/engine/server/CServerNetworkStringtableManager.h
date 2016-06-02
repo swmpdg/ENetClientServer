@@ -1,7 +1,7 @@
 #ifndef CSERVERNETWORKSTRINGTABLEMANAGER_H
 #define CSERVERNETWORKSTRINGTABLEMANAGER_H
 
-#include "utility/CNetworkStringTableManager.h"
+#include "networking/stringtable/CNetworkStringTableManager.h"
 
 class CServer;
 

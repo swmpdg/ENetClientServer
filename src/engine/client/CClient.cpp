@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "utility/NetworkUtils.h"
+#include "networking/NetworkUtils.h"
 
 #include "CClient.h"
 

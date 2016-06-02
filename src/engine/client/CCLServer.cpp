@@ -1,8 +1,8 @@
 #include <cassert>
 
-#include "utility/CNetworkBuffer.h"
+#include "networking/CNetworkBuffer.h"
 
-#include "utility/NetworkUtils.h"
+#include "networking/NetworkUtils.h"
 
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
 #include "messages/sv_cl_messages/NetTable.pb.h"
