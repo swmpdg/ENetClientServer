@@ -4,11 +4,33 @@
 
 #include "networking/NetworkUtils.h"
 
+#include "game/shared/client/IGameClientInterface.h"
+
 #include "CClient.h"
 
 CClient::~CClient()
 {
 	assert( !m_pHost );
+}
+
+bool CClient::Connect( const CreateInterfaceFn* factories, const size_t uiNumFactories )
+{
+	assert( factories );
+	assert( uiNumFactories );
+
+	for( size_t uiIndex = 0; uiIndex < uiNumFactories; ++uiIndex )
+	{
+		auto factory = factories[ uiIndex ];
+
+		if( !m_pGameClient )
+		{
+			m_pGameClient = static_cast<IGameClientInterface*>( factory( IGAMECLIENTINTERFACE_NAME, nullptr ) );
+
+			m_Server.GetNetStringTableManager().SetGameClient( m_pGameClient );
+		}
+	}
+
+	return m_pGameClient != nullptr;
 }
 
 bool CClient::Initialize()
@@ -91,6 +113,14 @@ void CClient::RunFrame()
 	DispatchServerMessages();
 }
 
+bool CClient::ClientCommand( const CCommand& command )
+{
+	if( m_pGameClient->ClientCommand( command ) )
+		return true;
+
+	return false;
+}
+
 void CClient::ProcessNetworkEvents()
 {
 	assert( m_bInitialized );
@@ -108,8 +138,15 @@ void CClient::ProcessNetworkEvents()
 
 				assert( m_Server.GetConnectionState() == CLServerConnState::CONNECTING );
 
-				//TODO: this should be called when the client has finished connecting (got server info, downloaded resources, etc).
-				m_Server.Connected();
+				if( m_pGameClient->ClientConnected() )
+				{
+					//TODO: this should be called when the client has finished connecting (got server info, downloaded resources, etc).
+					m_Server.Connected();
+				}
+				else
+				{
+					DisconnectFromServer();
+				}
 
 				break;
 			}
@@ -122,7 +159,7 @@ void CClient::ProcessNetworkEvents()
 
 					assert( pServer->IsConnected() );
 
-					//TODO: call ClientDisconnected here.
+					m_pGameClient->ClientDisconnected( pServer->IsFullyConnected() );
 
 					pServer->Reset();
 				}

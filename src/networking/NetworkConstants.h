@@ -64,6 +64,11 @@ enum SVDisconnectCode : enet_uint32
 	*	No free slots on the server (ENet should handle this for us)
 	*/
 	NO_FREE_SLOTS,
+
+	/**
+	*	Connection rejected by server.
+	*/
+	CONNECTION_REJECTED,
 };
 }
 

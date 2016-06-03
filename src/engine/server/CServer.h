@@ -10,10 +10,16 @@
 #include "networking/stringtable/CNetworkStringTableManager.h"
 #include "CServerNetworkStringTableManager.h"
 
+#include "lib/LibInterface.h"
+
 //Windows
 #undef SendMessage
 
 class CSVClient;
+
+class IGameServerInterface;
+
+class CCommand;
 
 /**
 *	The server's representation of itself.
@@ -52,12 +58,25 @@ public:
 	CNetworkStringTableManager& GetNetStringTableManager() { return m_NetStringTableManager; }
 
 	/**
+	*	Connects the server with any systems it needs access to.
+	*	@param factories List of factories to use when connecting.
+	*	@param uiNumFactories Number of factories.
+	*	@return true on success, false otherwise.
+	*/
+	bool Connect( const CreateInterfaceFn* factories, const size_t uiNumFactories );
+
+	/**
 	*	Called when the server first starts. Initializes the network connection and the client list with the given number of clients.
 	*	@param uiMaxClients Maximum number of clients to support.
 	*	@param uiPort Port to listen on.
 	*	@return true if initialization succeeded, false otherwise.
 	*/
 	bool Initialize( const size_t uiMaxClients, const enet_uint16 uiPort );
+
+	/**
+	*	Changes the server to the given map.
+	*/
+	void ChangeLevel( const char* const pszMapName );
 
 	/**
 	*	Shuts down the server. Disconnects all clients, clears all memory and closes the network connection.
@@ -76,6 +95,14 @@ public:
 	*	@return true on success, false otherwise.
 	*/
 	bool SendBroadcastMessage( const SVCLMessage messageId, google::protobuf::Message& message );
+
+	/**
+	*	Called when a client has entered a command.
+	*	TODO: needs an object that represents the client.
+	*	@param command Object that contains command arguments.
+	*	@return true if handled, false otherwise.
+	*/
+	bool ClientCommand( const CCommand& command );
 
 private:
 
@@ -120,6 +147,8 @@ private:
 	size_t m_uiMaxClients = 0;
 
 	CServerNetworkStringTableManager m_NetStringTableManager;
+
+	IGameServerInterface* m_pGameServer = nullptr;
 
 private:
 	CServer( const CServer& ) = delete;

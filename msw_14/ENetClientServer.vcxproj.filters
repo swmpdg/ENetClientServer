@@ -67,6 +67,60 @@
     <Filter Include="Source Files\engine\server">
       <UniqueIdentifier>{07f1c04d-1e08-41e4-8551-7437293507f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{892d08e8-a1b4-46b1-83fb-668111ab4eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\shared">
+      <UniqueIdentifier>{3d2d67a6-ec42-4d90-b0ce-f2bf315919d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\shared\client">
+      <UniqueIdentifier>{6528c966-aafc-424e-a186-4e93091a917c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\shared\server">
+      <UniqueIdentifier>{c2e90433-b84a-49ca-aae4-6433b3c71bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\server">
+      <UniqueIdentifier>{dcec5b70-a1d2-4f92-b46c-f025480a61cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{00e23518-e43f-4e76-967e-9c479a8953cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\shared">
+      <UniqueIdentifier>{4db9d424-6ce9-4d9a-8137-ad8d79132f49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\shared\server">
+      <UniqueIdentifier>{063b6a5a-bb57-4707-bba1-6b5caa4da812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\shared\client">
+      <UniqueIdentifier>{5cd90a1a-43c2-41f1-b763-72d9eeee266d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\server">
+      <UniqueIdentifier>{891834ca-9994-48d8-8dfa-af63360dcaeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib">
+      <UniqueIdentifier>{9b5b18b1-be31-47c5-b449-e3a26977dc20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lib">
+      <UniqueIdentifier>{64566707-19f7-4977-938a-50b54ecbc760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{efd7a4a5-a79a-4291-a544-3c66430c202f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\shared">
+      <UniqueIdentifier>{9d480775-93ed-499d-bdff-670253de46f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{84ff4ccc-428a-4c4a-90f5-47018314fd32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\shared">
+      <UniqueIdentifier>{fea8c53b-3439-4799-beb1-680a63ba4629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\client">
+      <UniqueIdentifier>{596268b4-558c-41c9-bc04-67be71996f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\client">
+      <UniqueIdentifier>{b21cb1cf-521f-4945-b0e7-d59d71ac1ff0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -128,6 +182,24 @@
     </ClCompile>
     <ClCompile Include="..\src\engine\CGame.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game\server\CGameServer.cpp">
+      <Filter>Source Files\game\server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lib\LibInterface.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\shared\Platform.cpp">
+      <Filter>Source Files\core\shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game\client\CGameClient.cpp">
+      <Filter>Source Files\game\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\CCommand.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utility\Tokenization.cpp">
+      <Filter>Source Files\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +268,36 @@
     </ClInclude>
     <ClInclude Include="..\src\engine\CGame.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\shared\server\IGameServerInterface.h">
+      <Filter>Header Files\game\shared\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\shared\client\IGameClientInterface.h">
+      <Filter>Header Files\game\shared\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\server\CGameServer.h">
+      <Filter>Header Files\game\server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\LibInterface.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\shared\Platform.h">
+      <Filter>Header Files\core\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\shared\IBaseGameInterface.h">
+      <Filter>Header Files\game\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\game\client\CGameClient.h">
+      <Filter>Header Files\game\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\shared\Utility.h">
+      <Filter>Header Files\core\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\CCommand.h">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utility\Tokenization.h">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

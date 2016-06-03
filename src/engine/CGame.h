@@ -10,8 +10,6 @@
 #include "engine/server/CServer.h"
 #include "engine/client/CClient.h"
 
-class CNetworkStringTable;
-
 /**
 *	The game's representation of itself.
 */
@@ -48,6 +46,11 @@ public:
 
 private:
 	/**
+	*	Runs the main game loop.
+	*/
+	bool RunGameLoop();
+
+	/**
 	*	Entry point for the IO thread.
 	*	@param pGame Game instance.
 	*/
@@ -70,9 +73,6 @@ private:
 	std::string m_szInput;
 
 	bool m_bInputPending = false;
-
-	CNetworkStringTable* m_pServerTable = nullptr;
-	CNetworkStringTable* m_pClientTable = nullptr;
 
 private:
 	CGame( const CGame& ) = delete;

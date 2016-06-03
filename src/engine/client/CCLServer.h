@@ -74,7 +74,7 @@ public:
 	/**
 	*	@return The client's network string table manager.
 	*/
-	CNetworkStringTableManager& GetNetStringTableManager() { return m_NetworkStringTableManager; }
+	CClientNetworkStringTableManager& GetNetStringTableManager() { return m_NetworkStringTableManager; }
 
 	/**
 	*	Initializes this server handler.

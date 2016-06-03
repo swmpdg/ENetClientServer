@@ -9,8 +9,12 @@
 
 #include "CCLServer.h"
 
+#include "lib/LibInterface.h"
+
 //Windows define
 #undef SendMessage
+
+class IGameClientInterface;
 
 /**
 *	The client's representation of itself.
@@ -27,6 +31,14 @@ public:
 	*	Destructor.
 	*/
 	~CClient();
+
+	/**
+	*	Connects the server with any systems it needs access to.
+	*	@param factories List of factories to use when connecting.
+	*	@param uiNumFactories Number of factories.
+	*	@return true on success, false otherwise.
+	*/
+	bool Connect( const CreateInterfaceFn* factories, const size_t uiNumFactories );
 
 	/**
 	*	@return Whether this client is initialized.
@@ -85,6 +97,13 @@ public:
 	*/
 	void RunFrame();
 
+	/**
+	*	Called when a client has entered a command.
+	*	@param command Object that contains command arguments.
+	*	@return true if handled, false otherwise.
+	*/
+	bool ClientCommand( const CCommand& command );
+
 private:
 
 	/**
@@ -113,6 +132,8 @@ private:
 	*	Server the client is currently connected to, if any.
 	*/
 	CCLServer m_Server;
+
+	IGameClientInterface* m_pGameClient = nullptr;
 
 private:
 	CClient( const CClient& ) = delete;

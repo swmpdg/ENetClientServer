@@ -9,6 +9,10 @@
 
 #include "utility/CWorldTime.h"
 
+#include "shared/Utility.h"
+
+#include "game/shared/server/IGameServerInterface.h"
+
 #include "CSVClient.h"
 
 #include "CServer.h"
@@ -22,6 +26,24 @@ CServer::~CServer()
 {
 	assert( !m_bInitialized );
 	assert( !m_pHost );
+}
+
+bool CServer::Connect( const CreateInterfaceFn* factories, const size_t uiNumFactories )
+{
+	assert( factories );
+	assert( uiNumFactories );
+
+	for( size_t uiIndex = 0; uiIndex < uiNumFactories; ++uiIndex )
+	{
+		auto factory = factories[ uiIndex ];
+
+		if( !m_pGameServer )
+		{
+			m_pGameServer = static_cast<IGameServerInterface*>( factory( IGAMESERVERINTERFACE_NAME, nullptr ) );
+		}
+	}
+
+	return m_pGameServer != nullptr;
 }
 
 bool CServer::Initialize( const size_t uiMaxClients, const enet_uint16 uiPort )
@@ -42,6 +64,17 @@ bool CServer::Initialize( const size_t uiMaxClients, const enet_uint16 uiPort )
 	m_uiMaxClients = uiMaxClients;
 
 	return true;
+}
+
+void CServer::ChangeLevel( const char* const pszMapName )
+{
+	assert( pszMapName);
+
+	GetNetStringTableManager().Clear();
+
+	//TODO: currently doesn't do anything map related. Just pretend it's working.
+
+	m_pGameServer->CreateNetworkStringTables( GetNetStringTableManager() );
 }
 
 void CServer::Shutdown()
@@ -111,6 +144,14 @@ bool CServer::SendBroadcastMessage( const SVCLMessage messageId, google::protobu
 	return bSuccess;
 }
 
+bool CServer::ClientCommand( const CCommand& command )
+{
+	if( m_pGameServer->ClientCommand( command ) )
+		return true;
+
+	return false;
+}
+
 void CServer::ProcessNetworkEvents()
 {
 	assert( m_bInitialized );
@@ -127,6 +168,8 @@ void CServer::ProcessNetworkEvents()
 				//A client has connected.
 				bool bAssignedSlot = false;
 
+				auto disconnectReason = SVDisconnectCode::NO_FREE_SLOTS;
+
 				for( size_t uiIndex = 0; uiIndex < m_uiMaxClients; ++uiIndex )
 				{
 					auto& client = m_pClients[ uiIndex ];
@@ -136,14 +179,27 @@ void CServer::ProcessNetworkEvents()
 						//TODO: assign edict
 						client.Initialize( event.peer );
 
-						//TODO: Call ClientConnect here.
+						char szRejectReason[ MAX_BUFFER_LENGTH ];
 
-						//TODO: This should be called after the client has finished connecting (got server info, downloaded files, etc)
-						client.Connected();
+						memset( szRejectReason, 0, sizeof( szRejectReason ) );
 
-						bAssignedSlot = true;
+						if( m_pGameServer->ClientConnect( szRejectReason, sizeof( szRejectReason ) ) )
+						{
+							bAssignedSlot = true;
 
-						printf( "Client connected\n" );
+							printf( "Client connected\n" );
+
+							//TODO: This should be called after the client has finished connecting (got server info, downloaded files, etc)
+							client.Connected();
+
+							m_pGameServer->ClientPutInServer();
+						}
+						else
+						{
+							//TODO: send reject reason
+
+							disconnectReason = SVDisconnectCode::CONNECTION_REJECTED;
+						}
 
 						break;
 					}
@@ -151,7 +207,7 @@ void CServer::ProcessNetworkEvents()
 
 				if( !bAssignedSlot )
 				{
-					enet_peer_disconnect( event.peer, SVDisconnectCode::NO_FREE_SLOTS );
+					enet_peer_disconnect( event.peer, disconnectReason );
 				}
 
 				break;
@@ -168,7 +224,7 @@ void CServer::ProcessNetworkEvents()
 
 					printf( "Client disconnected\n" );
 
-					//TODO: call ClientDisconnect here if it was fully connected before
+					m_pGameServer->ClientDisconnected( pClient->IsFullyConnected() );
 
 					pClient->Reset();
 				}

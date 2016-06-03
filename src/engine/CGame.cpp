@@ -7,6 +7,10 @@
 
 #include "messages/cl_sv_messages/ClientCmd.pb.h"
 
+#include "lib/LibInterface.h"
+#include "shared/Utility.h"
+#include "utility/CCommand.h"
+
 #include "CGame.h"
 
 #undef GetCurrentTime
@@ -15,12 +19,31 @@ bool CGame::Initialize( const enet_uint16 uiPort )
 {
 	m_uiPort = uiPort;
 
+	const CreateInterfaceFn factories[] = 
+	{
+		CreateInterface
+	};
+
+	printf( "Connecting server\n" );
+
+	if( !m_Server.Connect( factories, ARRAYSIZE( factories ) ) )
+	{
+		return false;
+	}
+
 	printf( "Starting server\n" );
 
 	//Initialize server with support for 1 concurrent client.
 	if( !m_Server.Initialize( 1, uiPort ) )
 	{
 		printf( "Failed to start server\n" );
+		return false;
+	}
+
+	printf( "Connecting client\n" );
+
+	if( !m_Client.Connect( factories, ARRAYSIZE( factories ) ) )
+	{
 		return false;
 	}
 
@@ -32,8 +55,8 @@ bool CGame::Initialize( const enet_uint16 uiPort )
 		return false;
 	}
 
-	//TODO: should be somewhere else
-	m_pServerTable = m_Server.GetNetStringTableManager().CreateTable( "table" );
+	//TODO: use a real map name when it works.
+	m_Server.ChangeLevel( "foo.bsp" );
 
 	return true;
 }
@@ -57,11 +80,14 @@ void CGame::Shutdown()
 
 bool CGame::Run()
 {
+	return RunGameLoop();
+}
+
+bool CGame::RunGameLoop()
+{
 	printf( "Running\n" );
 
 	std::thread ioThread( IOThread, this );
-
-	size_t uiStringOffset = 0;
 
 	while( !m_bTerminate )
 	{
@@ -70,28 +96,15 @@ bool CGame::Run()
 		m_Server.RunFrame();
 		m_Client.RunFrame();
 
-		if( !m_pClientTable && m_Client.IsFullyConnected() )
-		{
-			//TODO: needs a callback instead
-			m_pClientTable = m_Client.GetNetStringTableManager().CreateTable( "table" );
-
-			if( m_pClientTable )
-			{
-				printf( "Created client copy of the table\n" );
-			}
-			else
-			{
-				printf( "Couldn't create client copy of the table\n" );
-			}
-		}
-
 		if( m_IOMutex.try_lock() )
 		{
 			if( m_bInputPending )
 			{
 				m_bInputPending = false;
 
-				if( m_szInput == "connect" && !m_Client.IsConnected() )
+				CCommand command( m_szInput.c_str() );
+
+				if( strcmp( command.Arg( 0 ), "connect" ) == 0 && !m_Client.IsConnected() )
 				{
 					printf( "Connecting to server..." );
 
@@ -107,13 +120,11 @@ bool CGame::Run()
 						return false;
 					}
 				}
-				else if( m_szInput.find( "sendmessage" ) == 0 && m_Client.IsConnected() )
+				else if( strcmp( command.Arg( 0 ), "sendmessage" ) == 0 && m_Client.IsConnected() )
 				{
 					cl_sv_messages::ClientCmd cmd;
 
-					const size_t uiStart = strlen( "sendmessage" ) + 1;
-
-					cmd.set_command( ( m_szInput.length() > uiStart ? m_szInput.substr( uiStart ) : std::string() ) + "\n" );
+					cmd.set_command( std::string( command.GetArgumentsString() ) + "\n" );
 
 					if( m_Client.SendMessage( CLSVMessage::CLIENTCMD, cmd ) )
 					{
@@ -124,38 +135,29 @@ bool CGame::Run()
 						printf( "client: Failed to send message\n" );
 					}
 				}
-				else if( m_szInput == "disconnect" && m_Client.IsConnected() )
+				else if( strcmp( command.Arg( 0 ), "disconnect" ) == 0 && m_Client.IsConnected() )
 				{
 					m_Client.DisconnectFromServer();
-
-					m_pClientTable = nullptr;
-
-					uiStringOffset = 0;
 				}
-				else if( m_szInput == "finish" && !m_Client.IsConnected() )
+				else if( strcmp( command.Arg( 0 ), "finish" ) == 0 && !m_Client.IsConnected() )
 				{
 					printf( "Finished\n" );
 
 					m_bTerminate = true;
 				}
-				else if( m_szInput == "addstring" )
+				else
 				{
-					char szBuffer[ 256 ];
-
-					for( size_t uiIndex = 0; uiIndex < 100; ++uiIndex )
+					if( m_Client.IsConnected() )
 					{
-						snprintf( szBuffer, sizeof( szBuffer ), "foo %u", uiStringOffset++ );
-
-						m_pServerTable->Add( szBuffer );
+						if( !m_Client.ClientCommand( command ) )
+						{
+							m_Server.ClientCommand( command );
+						}
 					}
-				}
-				else if( m_szInput == "liststrings" )
-				{
-					printf( "Number of strings in table %s: %u\n", m_pClientTable->GetName(), m_pClientTable->GetStringCount() );
-
-					for( size_t uiIndex = 0; uiIndex < m_pClientTable->GetStringCount(); ++uiIndex )
+					else
 					{
-						printf( "String %u: %s\n", uiIndex, m_pClientTable->GetString( uiIndex ) );
+						//TODO: this shouldn't be here. These commands should be handled through the server console.
+						m_Server.ClientCommand( command );
 					}
 				}
 			}

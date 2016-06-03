@@ -6,7 +6,14 @@
 
 #include "networking/stringtable/CNetworkStringTable.h"
 
+#include "game/shared/client/IGameClientInterface.h"
+
 #include "CClientNetworkStringTableManager.h"
+
+void CClientNetworkStringTableManager::SetGameClient( IGameClientInterface* const pGameClient )
+{
+	m_pGameClient = pGameClient;
+}
 
 CNetworkStringTable* CClientNetworkStringTableManager::CreateTable( const char* const pszName )
 {
@@ -19,6 +26,8 @@ CNetworkStringTable* CClientNetworkStringTableManager::CreateTable( const char* 
 
 void CClientNetworkStringTableManager::ProcessNetTableMessage( sv_cl_messages::NetTable& table )
 {
+	assert( m_pGameClient );
+
 	switch( table.command() )
 	{
 	case sv_cl_messages::NetTable_Command_CREATE:
@@ -26,6 +35,8 @@ void CClientNetworkStringTableManager::ProcessNetTableMessage( sv_cl_messages::N
 			assert( sv_cl_messages::NetTable::kName == table.oneof_tableID_case() );
 
 			m_Tables.push_back( new CNetworkStringTable( g_StringPool.Allocate( table.name().c_str() ), m_Tables.size() ) );
+
+			m_pGameClient->OnNetworkStringTableCreated( m_Tables.back()->GetName(), *this );
 
 			break;
 		}

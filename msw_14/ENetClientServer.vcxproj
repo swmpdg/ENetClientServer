@@ -57,7 +57,7 @@
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ObjectFileName>$(IntDir)/$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;$(SolutionDir)..\src\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,7 +78,7 @@
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ObjectFileName>$(IntDir)/$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external\Google;$(SolutionDir)..\external\ENet\include;$(SolutionDir)..\src;$(SolutionDir)..\src\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,6 +91,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\core\shared\Platform.cpp" />
     <ClCompile Include="..\src\engine\CGame.cpp" />
     <ClCompile Include="..\src\engine\client\CClient.cpp" />
     <ClCompile Include="..\src\engine\client\CClientNetworkStringTableManager.cpp" />
@@ -98,6 +99,9 @@
     <ClCompile Include="..\src\engine\server\CServer.cpp" />
     <ClCompile Include="..\src\engine\server\CServerNetworkStringtableManager.cpp" />
     <ClCompile Include="..\src\engine\server\CSVClient.cpp" />
+    <ClCompile Include="..\src\game\client\CGameClient.cpp" />
+    <ClCompile Include="..\src\game\server\CGameServer.cpp" />
+    <ClCompile Include="..\src\lib\LibInterface.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
@@ -108,11 +112,15 @@
     <ClCompile Include="..\src\networking\NetworkUtils.cpp" />
     <ClCompile Include="..\src\networking\stringtable\CNetworkStringTable.cpp" />
     <ClCompile Include="..\src\networking\stringtable\CNetworkStringTableManager.cpp" />
+    <ClCompile Include="..\src\utility\CCommand.cpp" />
     <ClCompile Include="..\src\utility\CHashStringPool.cpp" />
     <ClCompile Include="..\src\utility\CWorldTime.cpp" />
+    <ClCompile Include="..\src\utility\Tokenization.cpp" />
     <ClCompile Include="..\src\utility\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\core\shared\Platform.h" />
+    <ClInclude Include="..\src\core\shared\Utility.h" />
     <ClInclude Include="..\src\engine\CGame.h" />
     <ClInclude Include="..\src\engine\client\CClient.h" />
     <ClInclude Include="..\src\engine\client\CClientNetworkStringTableManager.h" />
@@ -120,6 +128,12 @@
     <ClInclude Include="..\src\engine\server\CServer.h" />
     <ClInclude Include="..\src\engine\server\CServerNetworkStringtableManager.h" />
     <ClInclude Include="..\src\engine\server\CSVClient.h" />
+    <ClInclude Include="..\src\game\client\CGameClient.h" />
+    <ClInclude Include="..\src\game\server\CGameServer.h" />
+    <ClInclude Include="..\src\game\shared\client\IGameClientInterface.h" />
+    <ClInclude Include="..\src\game\shared\IBaseGameInterface.h" />
+    <ClInclude Include="..\src\game\shared\server\IGameServerInterface.h" />
+    <ClInclude Include="..\src\lib\LibInterface.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h" />
@@ -131,9 +145,11 @@
     <ClInclude Include="..\src\networking\stringtable\CNetworkStringTable.h" />
     <ClInclude Include="..\src\networking\stringtable\CNetworkStringTableManager.h" />
     <ClInclude Include="..\src\utility\CAutoString.h" />
+    <ClInclude Include="..\src\utility\CCommand.h" />
     <ClInclude Include="..\src\utility\CHashStringPool.h" />
     <ClInclude Include="..\src\utility\CWorldTime.h" />
     <ClInclude Include="..\src\utility\StringUtils.h" />
+    <ClInclude Include="..\src\utility\Tokenization.h" />
     <ClInclude Include="..\src\utility\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
