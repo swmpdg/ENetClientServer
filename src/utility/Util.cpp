@@ -15,3 +15,18 @@ double GetCurrentTime()
 {
 	return GetCurrentTick() / 1000.0;
 }
+
+size_t UTIL_FindCommonBaseCount( const char* pszString1, const char* pszString2 )
+{
+	if( !pszString1 || !( *pszString1 ) || !pszString2 || !( *pszString2 ) )
+		return 0;
+
+	size_t uiCount = 0;
+
+	while( *pszString1 && *pszString1++ == *pszString2++ )
+	{
+		++uiCount;
+	}
+
+	return uiCount;
+}

@@ -103,16 +103,26 @@ class NetTables_Table : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
+  // required uint32 maxEntries = 2;
+  inline bool has_maxentries() const;
+  inline void clear_maxentries();
+  static const int kMaxEntriesFieldNumber = 2;
+  inline ::google::protobuf::uint32 maxentries() const;
+  inline void set_maxentries(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:sv_cl_messages.NetTables.Table)
  private:
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_maxentries();
+  inline void clear_has_maxentries();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::std::string* name_;
+  ::google::protobuf::uint32 maxentries_;
   friend void  protobuf_AddDesc_NetTables_2eproto();
   friend void protobuf_AssignDesc_NetTables_2eproto();
   friend void protobuf_ShutdownFile_NetTables_2eproto();
@@ -285,6 +295,30 @@ inline void NetTables_Table::set_allocated_name(::std::string* name) {
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:sv_cl_messages.NetTables.Table.name)
+}
+
+// required uint32 maxEntries = 2;
+inline bool NetTables_Table::has_maxentries() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void NetTables_Table::set_has_maxentries() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void NetTables_Table::clear_has_maxentries() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void NetTables_Table::clear_maxentries() {
+  maxentries_ = 0u;
+  clear_has_maxentries();
+}
+inline ::google::protobuf::uint32 NetTables_Table::maxentries() const {
+  // @@protoc_insertion_point(field_get:sv_cl_messages.NetTables.Table.maxEntries)
+  return maxentries_;
+}
+inline void NetTables_Table::set_maxentries(::google::protobuf::uint32 value) {
+  set_has_maxentries();
+  maxentries_ = value;
+  // @@protoc_insertion_point(field_set:sv_cl_messages.NetTables.Table.maxEntries)
 }
 
 // -------------------------------------------------------------------

@@ -12,8 +12,8 @@ REGISTER_SINGLE_INTERFACE( IGAMESERVERINTERFACE_NAME, CGameServer );
 
 void CGameServer::CreateNetworkStringTables( INetworkStringTableManager& manager )
 {
-	m_pServerTable = manager.CreateTable( "table" );
-	auto pTable = manager.CreateTable( "table2" );
+	m_pServerTable = manager.CreateTable( "table", 1 << 14 );
+	auto pTable = manager.CreateTable( "table2", 1 << 14 );
 
 	pTable->Add( "string for 2nd table" );
 }

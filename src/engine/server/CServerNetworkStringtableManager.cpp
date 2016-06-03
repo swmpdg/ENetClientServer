@@ -25,6 +25,7 @@ void CServerNetworkStringTableManager::WriteNetTableCreateMessages( CNetworkBuff
 		auto pTableField = tables.add_tables();
 
 		pTableField->set_name( pTable->GetName() );
+		pTableField->set_maxentries( pTable->GetMaxEntries() );
 	}
 
 

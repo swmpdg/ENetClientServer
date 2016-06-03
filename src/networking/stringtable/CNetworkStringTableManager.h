@@ -39,7 +39,7 @@ public:
 
 	CNetworkStringTable* GetTableByName( const char* const pszName ) override final;
 
-	CNetworkStringTable* CreateTable( const char* const pszName ) override final;
+	CNetworkStringTable* CreateTable( const char* const pszName, const size_t uiMaxEntries ) override final;
 
 	/**
 	*	@return Whether table creation is allowed or not.

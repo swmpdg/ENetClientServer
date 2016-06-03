@@ -5,6 +5,7 @@ message NetTables
 	message Table
 	{
 		required string name = 1;
+		required uint32 maxEntries = 2;
 	}
 	
 	repeated Table tables = 1;

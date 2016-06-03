@@ -44,21 +44,36 @@ CNetworkStringTable* CNetworkStringTableManager::GetTableByName( const char* con
 	return const_cast<CNetworkStringTable*>( const_cast<const CNetworkStringTableManager* const>( this )->GetTableByName( pszName ) );
 }
 
-CNetworkStringTable* CNetworkStringTableManager::CreateTable( const char* const pszName )
+CNetworkStringTable* CNetworkStringTableManager::CreateTable( const char* const pszName, const size_t uiMaxEntries )
 {
 	if( !pszName || !( *pszName ) )
 		return nullptr;
 
+	if( uiMaxEntries == 0 )
+	{
+		printf( "CNetworkStringTableManager::CreateTable: Maximum number of entries must be greater than zero and a power of 2!\n" );
+		return nullptr;
+	}
+
+	if( ( uiMaxEntries & ( uiMaxEntries - 1 ) ) != 0 )
+	{
+		printf( "CNetworkStringTableManager::CreateTable: Maximum number of entries must be greater than zero and a power of 2!\n" );
+		return nullptr;
+	}
+
 	if( !TableCreationAllowed() )
 	{
-		printf( "Table creation is not allowed!\n" );
+		printf( "CNetworkStringTableManager::CreateTable: Table creation is not allowed!\n" );
 		return nullptr;
 	}
 
 	if( GetTableByName( pszName ) )
+	{
+		printf( "CNetworkStringTableManager::CreateTable: A table with name \"%s\" already exists!\n", pszName );
 		return nullptr;
+	}
 
-	auto pTable = new CNetworkStringTable( pszName, NST::IndexToTableID( m_Tables.size() ) );
+	auto pTable = new CNetworkStringTable( pszName, NST::IndexToTableID( m_Tables.size() ), uiMaxEntries );
 
 	m_Tables.push_back( pTable );
 

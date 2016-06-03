@@ -187,7 +187,7 @@ void CClient::ProcessNetworkEvents()
 						pszReason = SVDisconnectCode::ToString( static_cast<SVDisconnectCode::SVDisconnectCode>( event.data ) );
 					}
 
-					printf( "You have been disconnect from the server.\nThe reason given was:\n%s\n", pszReason );
+					printf( "You have been disconnected from the server.\nThe reason given was:\n%s\n", pszReason );
 
 					pServer->Reset();
 				}

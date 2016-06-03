@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstring>
 
 #include "networking/CNetworkBuffer.h"
@@ -18,9 +19,11 @@
 
 #undef GetCurrentTime
 
-CNetworkStringTable::CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID )
+CNetworkStringTable::CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID, const size_t uiMaxEntries )
 	: m_pszName( pszName )
 	, m_TableID( tableID )
+	, m_uiMaxEntries( uiMaxEntries )
+	, m_uiEntriesBits( static_cast<size_t>( log2( uiMaxEntries ) ) )
 {
 	assert( pszName && *pszName );
 }
@@ -68,6 +71,12 @@ size_t CNetworkStringTable::Add( const char* const pszString )
 	if( uiIndex != NST::INVALID_STRING_INDEX )
 		return uiIndex;
 
+	if( m_TableEntries.size() >= m_uiMaxEntries )
+	{
+		printf( "CNetworkStringTable::Add: Network String Table %s has reached maximum entries! (%u)\n", m_pszName, m_uiMaxEntries );
+		return NST::INVALID_STRING_INDEX;
+	}
+
 	TableEntry_t entry;
 
 	entry.pszString = g_StringPool.Allocate( pszString );
@@ -100,6 +109,8 @@ NST::SerializeResult CNetworkStringTable::Serialize( CNetworkBuffer& buffer, con
 
 	CNetworkBuffer tempBuf( "CNetworkStringTable::Serialize_buffer", msgBuf, sizeof( msgBuf ) );
 
+	size_t uiPrevious = NST::INVALID_STRING_INDEX;
+
 	for( size_t uiIndex = uiStart; uiIndex < m_TableEntries.size(); ++uiIndex )
 	{
 		const auto& entry = m_TableEntries[ uiIndex ];
@@ -117,14 +128,35 @@ NST::SerializeResult CNetworkStringTable::Serialize( CNetworkBuffer& buffer, con
 		const size_t uiOffset = tempBuf.GetBitsInBuffer();
 
 		tempBuf.WriteOneBit( 1 );
-		//TODO: bit count can be determined by maximum entries setting.
-		//TODO: index doesn't always have to be sent. If a large number of sequential data is sent, it can be sent as a bit indicating previous + 1.
-		tempBuf.WriteUnsignedBitLong( uiIndex, 32 );
-		//TODO: code commonly precaches resources that have similar paths. A potential optimization here would allow them to share that.
-		//E.g.:
-		//weapons/hks1.wav
-		//weapons/hks2.wav
-		tempBuf.WriteString( entry.pszString );
+
+		if( uiPrevious != NST::INVALID_STRING_INDEX && uiPrevious + 1 == uiIndex )
+		{
+			tempBuf.WriteOneBit( 1 );
+
+			//Code commonly precaches resources that have similar paths. This allows them to share that.
+			//E.g.:
+			//weapons/hks1.wav
+			//weapons/hks2.wav
+			const size_t uiCommon = UTIL_FindCommonBaseCount( m_TableEntries[ uiPrevious ].pszString, entry.pszString ) & COMMON_BITS_MASK;
+
+			if( uiCommon > 0 )
+			{
+				tempBuf.WriteOneBit( 1 );
+				tempBuf.WriteUnsignedBitLong( uiCommon, NUM_COMMON_BITS );
+				tempBuf.WriteString( entry.pszString + uiCommon );
+			}
+			else
+			{
+				tempBuf.WriteOneBit( 0 );
+				tempBuf.WriteString( entry.pszString );
+			}
+		}
+		else
+		{
+			tempBuf.WriteOneBit( 0 );
+			tempBuf.WriteUnsignedBitLong( uiIndex, m_uiEntriesBits );
+			tempBuf.WriteString( entry.pszString );
+		}
 
 		if( tempBuf.HasOverflowed() )
 		{
@@ -137,6 +169,8 @@ NST::SerializeResult CNetworkStringTable::Serialize( CNetworkBuffer& buffer, con
 
 		//Set this after the overflow check so it doesn't return true if the buffer was too full to start with.
 		bWroteSomething = true;
+
+		uiPrevious = uiIndex;
 	}
 
 	//Nothing left to write.
@@ -167,13 +201,34 @@ bool CNetworkStringTable::Unserialize( CNetworkBuffer& buffer )
 
 	char szBuffer[ 4096 ];
 
+	size_t uiIndex;
+
 	//As long as there's another entry
 	while( buffer.ReadOneBit() )
 	{
-		//TODO: optimize bit count
-		const size_t uiIndex = buffer.ReadUnsignedBitLong( 32 );
+		if( buffer.ReadOneBit() )
+		{
+			++uiIndex;
 
-		buffer.ReadString( szBuffer, sizeof( szBuffer ) );
+			if( buffer.ReadOneBit() )
+			{
+				const size_t uiCommon = buffer.ReadUnsignedBitLong( NUM_COMMON_BITS );
+
+				strncpy( szBuffer, m_TableEntries[ uiIndex - 1 ].pszString, uiCommon );
+				buffer.ReadString( szBuffer + uiCommon, sizeof( szBuffer ) - uiCommon );
+
+				szBuffer[ sizeof( szBuffer ) - 1 ] = '\0';
+			}
+			else
+			{
+				buffer.ReadString( szBuffer, sizeof( szBuffer ) );
+			}
+		}
+		else
+		{
+			uiIndex = buffer.ReadUnsignedBitLong( m_uiEntriesBits );
+			buffer.ReadString( szBuffer, sizeof( szBuffer ) );
+		}
 
 		if( buffer.HasOverflowed() )
 			break;

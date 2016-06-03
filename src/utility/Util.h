@@ -20,4 +20,12 @@ long long GetCurrentTick();
 */
 double GetCurrentTime();
 
+/**
+*	Finds the number of characters the given strings have in common.
+*	@param pszString1 First string to compare.
+*	@param pszString2 Second string to compare.
+*	@return Number of common characters.
+*/
+size_t UTIL_FindCommonBaseCount( const char* pszString1, const char* pszString2 );
+
 #endif //UTILITY_UTIL_H

@@ -22,6 +22,11 @@ public:
 	virtual NST::TableID_t GetID() const = 0;
 
 	/**
+	*	@return Maximum number of entries.
+	*/
+	virtual size_t GetMaxEntries() const = 0;
+
+	/**
 	*	@return The number of strings that are in this table.
 	*/
 	virtual size_t GetStringCount() const = 0;

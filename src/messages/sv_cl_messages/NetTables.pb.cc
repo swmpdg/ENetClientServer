@@ -52,8 +52,9 @@ void protobuf_AssignDesc_NetTables_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NetTables));
   NetTables_Table_descriptor_ = NetTables_descriptor_->nested_type(0);
-  static const int NetTables_Table_offsets_[1] = {
+  static const int NetTables_Table_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NetTables_Table, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NetTables_Table, maxentries_),
   };
   NetTables_Table_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -100,9 +101,10 @@ void protobuf_AddDesc_NetTables_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017NetTables.proto\022\016sv_cl_messages\"S\n\tNet"
+    "\n\017NetTables.proto\022\016sv_cl_messages\"g\n\tNet"
     "Tables\022/\n\006tables\030\001 \003(\0132\037.sv_cl_messages."
-    "NetTables.Table\032\025\n\005Table\022\014\n\004name\030\001 \002(\t", 118);
+    "NetTables.Table\032)\n\005Table\022\014\n\004name\030\001 \002(\t\022\022"
+    "\n\nmaxEntries\030\002 \002(\r", 138);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetTables.proto", &protobuf_RegisterTypes);
   NetTables::default_instance_ = new NetTables();
@@ -123,6 +125,7 @@ struct StaticDescriptorInitializer_NetTables_2eproto {
 
 #ifndef _MSC_VER
 const int NetTables_Table::kNameFieldNumber;
+const int NetTables_Table::kMaxEntriesFieldNumber;
 #endif  // !_MSC_VER
 
 NetTables_Table::NetTables_Table()
@@ -145,6 +148,7 @@ void NetTables_Table::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  maxentries_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -183,10 +187,13 @@ NetTables_Table* NetTables_Table::New() const {
 }
 
 void NetTables_Table::Clear() {
-  if (has_name()) {
-    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      name_->clear();
+  if (_has_bits_[0 / 32] & 3) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
     }
+    maxentries_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -211,6 +218,21 @@ bool NetTables_Table::MergePartialFromCodedStream(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
             "name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_maxEntries;
+        break;
+      }
+
+      // required uint32 maxEntries = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_maxEntries:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &maxentries_)));
+          set_has_maxentries();
         } else {
           goto handle_unusual;
         }
@@ -253,6 +275,11 @@ void NetTables_Table::SerializeWithCachedSizes(
       1, this->name(), output);
   }
 
+  // required uint32 maxEntries = 2;
+  if (has_maxentries()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->maxentries(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -274,6 +301,11 @@ void NetTables_Table::SerializeWithCachedSizes(
         1, this->name(), target);
   }
 
+  // required uint32 maxEntries = 2;
+  if (has_maxentries()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->maxentries(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -291,6 +323,13 @@ int NetTables_Table::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->name());
+    }
+
+    // required uint32 maxEntries = 2;
+    if (has_maxentries()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->maxentries());
     }
 
   }
@@ -323,6 +362,9 @@ void NetTables_Table::MergeFrom(const NetTables_Table& from) {
     if (from.has_name()) {
       set_name(from.name());
     }
+    if (from.has_maxentries()) {
+      set_maxentries(from.maxentries());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -340,7 +382,7 @@ void NetTables_Table::CopyFrom(const NetTables_Table& from) {
 }
 
 bool NetTables_Table::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
@@ -348,6 +390,7 @@ bool NetTables_Table::IsInitialized() const {
 void NetTables_Table::Swap(NetTables_Table* other) {
   if (other != this) {
     std::swap(name_, other->name_);
+    std::swap(maxentries_, other->maxentries_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

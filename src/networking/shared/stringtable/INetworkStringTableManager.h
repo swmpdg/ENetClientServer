@@ -43,9 +43,10 @@ public:
 	/**
 	*	Creates a new table. If a table with the given name already exists, returns null. Table creation is restricted to certain points in time.
 	*	@param pszName Name of the table. Must be a valid, non-empty name that uniquely identifies this table.
+	*	@param uiMaxEntries Maximum number of entries that can be added to this table. Must be a power of 2.
 	*	@return Table, or null if the given parameters are invalid.
 	*/
-	virtual INetworkStringTable* CreateTable( const char* const pszName ) = 0;
+	virtual INetworkStringTable* CreateTable( const char* const pszName, const size_t uiMaxEntries ) = 0;
 };
 
 inline INetworkStringTableManager::~INetworkStringTableManager()

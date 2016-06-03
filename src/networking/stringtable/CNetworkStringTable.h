@@ -31,54 +31,56 @@ private:
 
 	typedef std::vector<TableEntry_t> TableEntries_t;
 
+	/**
+	*	The number of bits to use to represent common string sequences.
+	*/
+	static const size_t NUM_COMMON_BITS = 5;
+	static const size_t COMMON_BITS_MASK = ( 1 << NUM_COMMON_BITS ) - 1;
+
 public:
 	/**
 	*	Constructor.
 	*/
-	CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID );
+	CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID, const size_t uiMaxEntries );
 
 	/**
 	*	Destructor.
 	*/
 	~CNetworkStringTable() = default;
 
-	/**
-	*	@return The name of this table.
-	*/
-	const char* GetName() const { return m_pszName; }
+	const char* GetName() const override final { return m_pszName; }
 
-	/**
-	*	@return This table's ID.
-	*/
-	NST::TableID_t GetID() const { return m_TableID; }
+	NST::TableID_t GetID() const override final { return m_TableID; }
+
+	size_t GetMaxEntries() const override final { return m_uiMaxEntries; }
 
 	/**
 	*	@return The number of strings that are in this table.
 	*/
-	size_t GetStringCount() const { return m_TableEntries.size(); }
+	size_t GetStringCount() const override final { return m_TableEntries.size(); }
 
 	/**
 	*	Gets the index of the given string.
 	*	@param pszString String to find.
 	*	@return Index of the string, or INVALID_INDEX if not found.
 	*/
-	size_t IndexOf( const char* const pszString ) const;
+	size_t IndexOf( const char* const pszString ) const override final;
 
 	/**
 	*	@return Whether the given index is valid or not.
 	*/
-	bool IsValidIndex( const size_t uiIndex ) const;
+	bool IsValidIndex( const size_t uiIndex ) const override final;
 
 	/**
 	*	@return String at the given index, or null if the index is invalid.
 	*/
-	const char* GetString( const size_t uiIndex ) const;
+	const char* GetString( const size_t uiIndex ) const override final;
 
 	/**
 	*	Adds a string to the table. If the string is already in the table, does nothing.
 	*	@return Index of the string.
 	*/
-	size_t Add( const char* const pszString );
+	size_t Add( const char* const pszString ) override final;
 
 	/**
 	*	Clears the table.
@@ -108,6 +110,11 @@ public:
 private:
 	const char* const m_pszName;
 	const NST::TableID_t m_TableID;
+
+	const size_t m_uiMaxEntries;
+
+	//Bit mask for entry index
+	const size_t m_uiEntriesBits;
 
 	TableEntries_t m_TableEntries;
 

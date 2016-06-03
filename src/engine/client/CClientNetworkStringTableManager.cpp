@@ -26,7 +26,7 @@ void CClientNetworkStringTableManager::ProcessNetTablesMessage( const sv_cl_mess
 
 		SetAllowTableCreation( true );
 
-		auto pTable = CreateTable( g_StringPool.Allocate( table.name().c_str() ) );
+		auto pTable = CreateTable( g_StringPool.Allocate( table.name().c_str() ), table.maxentries() );
 
 		SetAllowTableCreation( false );
 
