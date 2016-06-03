@@ -3,7 +3,7 @@
 
 #include "game/shared/IBaseGameInterface.h"
 
-class CNetworkStringTableManager;
+class INetworkStringTableManager;
 
 class CCommand;
 
@@ -17,7 +17,7 @@ public:
 	/**
 	*	Called when all network string tables should be created.
 	*/
-	virtual void CreateNetworkStringTables( CNetworkStringTableManager& manager ) = 0;
+	virtual void CreateNetworkStringTables( INetworkStringTableManager& manager ) = 0;
 
 	/**
 	*	Called when a client connects.

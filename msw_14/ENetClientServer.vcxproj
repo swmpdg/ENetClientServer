@@ -142,8 +142,12 @@
     <ClInclude Include="..\src\networking\CNetworkBuffer.h" />
     <ClInclude Include="..\src\networking\NetworkConstants.h" />
     <ClInclude Include="..\src\networking\NetworkUtils.h" />
+    <ClInclude Include="..\src\networking\shared\stringtable\INetworkStringTable.h" />
+    <ClInclude Include="..\src\networking\shared\stringtable\INetworkStringTableManager.h" />
+    <ClInclude Include="..\src\networking\shared\stringtable\NetStringTableConstants.h" />
     <ClInclude Include="..\src\networking\stringtable\CNetworkStringTable.h" />
     <ClInclude Include="..\src\networking\stringtable\CNetworkStringTableManager.h" />
+    <ClInclude Include="..\src\networking\stringtable\PrivateNetStringTableConstants.h" />
     <ClInclude Include="..\src\utility\CAutoString.h" />
     <ClInclude Include="..\src\utility\CCommand.h" />
     <ClInclude Include="..\src\utility\CHashStringPool.h" />

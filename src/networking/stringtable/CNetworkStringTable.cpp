@@ -18,7 +18,7 @@
 
 #undef GetCurrentTime
 
-CNetworkStringTable::CNetworkStringTable( const char* const pszName, const TableID_t tableID )
+CNetworkStringTable::CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID )
 	: m_pszName( pszName )
 	, m_TableID( tableID )
 {
@@ -28,7 +28,7 @@ CNetworkStringTable::CNetworkStringTable( const char* const pszName, const Table
 size_t CNetworkStringTable::IndexOf( const char* const pszString ) const
 {
 	if( !pszString )
-		return INVALID_INDEX;
+		return NST::INVALID_STRING_INDEX;
 
 	auto it = std::find_if( m_TableEntries.begin(), m_TableEntries.end(), 
 		[ = ]( const TableEntry_t& entry )
@@ -42,12 +42,12 @@ size_t CNetworkStringTable::IndexOf( const char* const pszString ) const
 		return it - m_TableEntries.begin();
 	}
 
-	return INVALID_INDEX;
+	return NST::INVALID_STRING_INDEX;
 }
 
 bool CNetworkStringTable::IsValidIndex( const size_t uiIndex ) const
 {
-	return uiIndex != INVALID_INDEX && uiIndex < m_TableEntries.size();
+	return uiIndex != NST::INVALID_STRING_INDEX && uiIndex < m_TableEntries.size();
 }
 
 const char* CNetworkStringTable::GetString( const size_t uiIndex ) const
@@ -61,11 +61,11 @@ const char* CNetworkStringTable::GetString( const size_t uiIndex ) const
 size_t CNetworkStringTable::Add( const char* const pszString )
 {
 	if( !pszString )
-		return INVALID_INDEX;
+		return NST::INVALID_STRING_INDEX;
 
 	const size_t uiIndex = IndexOf( pszString );
 
-	if( uiIndex != INVALID_INDEX )
+	if( uiIndex != NST::INVALID_STRING_INDEX )
 		return uiIndex;
 
 	TableEntry_t entry;

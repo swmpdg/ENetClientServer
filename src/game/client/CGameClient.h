@@ -3,7 +3,7 @@
 
 #include "game/shared/client/IGameClientInterface.h"
 
-class CNetworkStringTable;
+class INetworkStringTable;
 
 class CGameClient final : public IGameClientInterface
 {
@@ -12,14 +12,14 @@ public:
 
 	bool ClientConnected() override final;
 
-	void OnNetworkStringTableCreated( const char* const pszName, CNetworkStringTableManager& manager ) override final;
+	void OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager ) override final;
 
 	void ClientDisconnected( const bool bWasFullyConnected ) override final;
 
 	bool ClientCommand( const CCommand& command ) override final;
 
 private:
-	CNetworkStringTable* m_pClientTable = nullptr;
+	INetworkStringTable* m_pClientTable = nullptr;
 
 private:
 	CGameClient( const CGameClient& ) = delete;

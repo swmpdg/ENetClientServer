@@ -12,8 +12,6 @@ class CServerNetworkStringTableManager final : public CNetworkStringTableManager
 public:
 	CServerNetworkStringTableManager( CServer* const pServer );
 
-	CNetworkStringTable* CreateTable( const char* const pszName ) override final;
-
 	/**
 	*	Write create messages for each table into the buffer.
 	*/

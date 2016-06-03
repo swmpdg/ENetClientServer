@@ -3,14 +3,14 @@
 
 #include "game/shared/server/IGameServerInterface.h"
 
-class CNetworkStringTable;
+class INetworkStringTable;
 
 class CGameServer final : public IGameServerInterface
 {
 public:
 	CGameServer() = default;
 
-	void CreateNetworkStringTables( CNetworkStringTableManager& manager ) override final;
+	void CreateNetworkStringTables( INetworkStringTableManager& manager ) override final;
 
 	bool ClientConnect( char* pszRejectReason, const size_t uiRejectSizeInBytes ) override final;
 
@@ -21,7 +21,7 @@ public:
 	bool ClientCommand( const CCommand& command ) override final;
 
 private:
-	CNetworkStringTable* m_pServerTable = nullptr;
+	INetworkStringTable* m_pServerTable = nullptr;
 
 	size_t m_uiStringOffset = 0;
 

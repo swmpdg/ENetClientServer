@@ -1,5 +1,8 @@
-#include "networking/stringtable/CNetworkStringTableManager.h"
-#include "networking/stringtable/CNetworkStringTable.h"
+#include <cstdlib>
+#include <cstdio>
+
+#include "networking/shared/stringtable/INetworkStringTableManager.h"
+#include "networking/shared/stringtable/INetworkStringTable.h"
 
 #include "utility/CCommand.h"
 
@@ -7,7 +10,7 @@
 
 REGISTER_SINGLE_INTERFACE( IGAMESERVERINTERFACE_NAME, CGameServer );
 
-void CGameServer::CreateNetworkStringTables( CNetworkStringTableManager& manager )
+void CGameServer::CreateNetworkStringTables( INetworkStringTableManager& manager )
 {
 	m_pServerTable = manager.CreateTable( "table" );
 }
@@ -29,16 +32,22 @@ void CGameServer::ClientDisconnected( const bool bWasFullyConnected )
 
 bool CGameServer::ClientCommand( const CCommand& command )
 {
-	if( strcmp( command.Arg( 0 ), "addstring" ) == 0 )
+	if( strcmp( command.Arg( 0 ), "addstrings" ) == 0 )
 	{
 		char szBuffer[ 256 ];
 
-		for( size_t uiIndex = 0; uiIndex < 100; ++uiIndex )
+		const char* const pszName = command.ArgC() > 1 ? command.Arg( 1 ) : "foo";
+
+		const size_t uiCount = command.ArgC() > 2 ? strtoul( command.Arg( 2 ), nullptr, 10 ) : 100;
+
+		for( size_t uiIndex = 0; uiIndex < uiCount; ++uiIndex )
 		{
-			snprintf( szBuffer, sizeof( szBuffer ), "foo %u", m_uiStringOffset++ );
+			snprintf( szBuffer, sizeof( szBuffer ), "%s %u", pszName, m_uiStringOffset++ );
 
 			m_pServerTable->Add( szBuffer );
 		}
+
+		return true;
 	}
 
 	return false;

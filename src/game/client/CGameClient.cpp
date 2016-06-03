@@ -4,8 +4,8 @@
 
 #include "utility/CCommand.h"
 
-#include "networking/stringtable/CNetworkStringTableManager.h"
-#include "networking/stringtable/CNetworkStringTable.h"
+#include "networking/shared/stringtable/INetworkStringTableManager.h"
+#include "networking/shared/stringtable/INetworkStringTable.h"
 
 #include "CGameClient.h"
 
@@ -16,7 +16,7 @@ bool CGameClient::ClientConnected()
 	return true;
 }
 
-void CGameClient::OnNetworkStringTableCreated( const char* const pszName, CNetworkStringTableManager& manager )
+void CGameClient::OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager )
 {
 	if( strcmp( pszName, "table" ) == 0 )
 	{
@@ -26,7 +26,7 @@ void CGameClient::OnNetworkStringTableCreated( const char* const pszName, CNetwo
 
 void CGameClient::ClientDisconnected( const bool bWasFullyConnected )
 {
-	printf( "Client disconnected\n" );
+	printf( "client: Client disconnected\n" );
 }
 
 bool CGameClient::ClientCommand( const CCommand& command )

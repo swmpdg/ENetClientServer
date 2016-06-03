@@ -3,20 +3,15 @@
 
 #include <vector>
 
+#include "networking/shared/stringtable/INetworkStringTable.h"
+
 class CNetworkBuffer;
 
 /**
 *	A table of strings that can be networked between the server and all clients.
 */
-class CNetworkStringTable final
+class CNetworkStringTable final : public INetworkStringTable
 {
-public:
-	static const size_t INVALID_INDEX = -1;
-	
-	typedef size_t TableID_t;
-
-	static const TableID_t INVALID_TABLE_INDEX = -1;
-
 private:
 	/**
 	*	Represents a single entry in the table.
@@ -38,7 +33,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CNetworkStringTable( const char* const pszName, const TableID_t tableID );
+	CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID );
 
 	/**
 	*	Destructor.
@@ -53,7 +48,7 @@ public:
 	/**
 	*	@return This table's ID.
 	*/
-	TableID_t GetID() const { return m_TableID; }
+	NST::TableID_t GetID() const { return m_TableID; }
 
 	/**
 	*	@return The number of strings that are in this table.
@@ -110,7 +105,7 @@ public:
 
 private:
 	const char* const m_pszName;
-	const TableID_t m_TableID;
+	const NST::TableID_t m_TableID;
 
 	TableEntries_t m_TableEntries;
 

@@ -3,14 +3,15 @@
 
 #include <vector>
 
-#include "networking/stringtable/CNetworkStringTable.h"
+#include "networking/shared/stringtable/INetworkStringTableManager.h"
+#include "CNetworkStringTable.h"
 
 class CNetworkBuffer;
 
 /**
 *	Manages the list of network string tables.
 */
-class CNetworkStringTableManager
+class CNetworkStringTableManager : public INetworkStringTableManager
 {
 private:
 	typedef std::vector<CNetworkStringTable*> Tables_t;
@@ -26,39 +27,30 @@ public:
 	*/
 	~CNetworkStringTableManager() = default;
 
-	/**
-	*	@return The number of tables.
-	*/
-	size_t GetNumTables() const { return m_Tables.size(); }
+	size_t GetNumTables() const override final { return m_Tables.size(); }
+
+	const CNetworkStringTable* GetTableByIndex( const size_t uiIndex ) const override final;
+
+	CNetworkStringTable* GetTableByIndex( const size_t uiIndex ) override final;
+
+	const CNetworkStringTable* GetTableByName( const char* const pszName ) const override final;
+
+	CNetworkStringTable* GetTableByName( const char* const pszName ) override final;
+
+	CNetworkStringTable* CreateTable( const char* const pszName ) override final;
 
 	/**
-	*	Gets a table by index.
-	*	@return Table, or null if no table at that index exists.
+	*	@return Whether table creation is allowed or not.
 	*/
-	const CNetworkStringTable* GetTableByIndex( const size_t uiIndex ) const;
+	bool TableCreationAllowed() const { return m_bAllowTableCreation; }
 
 	/**
-	*	@copydoc GetTable( const size_t uiIndex ) const
+	*	Sets whether table creation is allowed or not.
 	*/
-	CNetworkStringTable* GetTableByIndex( const size_t uiIndex );
-
-	/**
-	*	Gets a table by name.
-	*	@return Table, or null if no table at that index exists.
-	*/
-	const CNetworkStringTable* GetTableByName( const char* const pszName ) const;
-
-	/**
-	*	@copydoc GetTableByName( const char* const pszName ) const
-	*/
-	CNetworkStringTable* GetTableByName( const char* const pszName );
-
-	/**
-	*	Creates a new table. If a table with the given name already exists, returns null.
-	*	@param pszName Name of the table. Must be a valid, non-empty name that uniquely identifies this table.
-	*	@return Table, or null if the given parameters are invalid.
-	*/
-	virtual CNetworkStringTable* CreateTable( const char* const pszName ) = 0;
+	void SetAllowTableCreation( const bool bAllowTableCreation )
+	{
+		m_bAllowTableCreation = bAllowTableCreation;
+	}
 
 	/**
 	*	Clears all tables.
@@ -75,10 +67,12 @@ public:
 	*	Unserializes table data from the given buffer.
 	*	@return true on success, false otherwise.
 	*/
-	bool UnserializeTable( const CNetworkStringTable::TableID_t ID, CNetworkBuffer& buffer );
+	bool UnserializeTable( const NST::TableID_t ID, CNetworkBuffer& buffer );
 
 protected:
 	Tables_t m_Tables;
+
+	bool m_bAllowTableCreation = false;
 
 private:
 	CNetworkStringTableManager( const CNetworkStringTableManager& ) = delete;

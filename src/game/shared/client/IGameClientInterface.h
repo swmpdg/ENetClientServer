@@ -3,7 +3,7 @@
 
 #include "game/shared/IBaseGameInterface.h"
 
-class CNetworkStringTableManager;
+class INetworkStringTableManager;
 
 class CCommand;
 
@@ -26,7 +26,7 @@ public:
 	*	@param pszName Name of the table that was created.
 	*	@param manager Table manager.
 	*/
-	virtual void OnNetworkStringTableCreated( const char* const pszName, CNetworkStringTableManager& manager ) = 0;
+	virtual void OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager ) = 0;
 
 	/**
 	*	Called when the client has disconnected from a server.

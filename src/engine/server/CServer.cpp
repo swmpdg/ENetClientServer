@@ -70,11 +70,16 @@ void CServer::ChangeLevel( const char* const pszMapName )
 {
 	assert( pszMapName);
 
-	GetNetStringTableManager().Clear();
+	m_NetStringTableManager.Clear();
 
 	//TODO: currently doesn't do anything map related. Just pretend it's working.
 
-	m_pGameServer->CreateNetworkStringTables( GetNetStringTableManager() );
+	m_NetStringTableManager.SetAllowTableCreation( true );
+
+	m_pGameServer->CreateNetworkStringTables( m_NetStringTableManager );
+
+	m_NetStringTableManager.SetAllowTableCreation( false );
+
 }
 
 void CServer::Shutdown()
@@ -222,7 +227,7 @@ void CServer::ProcessNetworkEvents()
 					assert( ( pClient - m_pClients ) >= 0 && static_cast<size_t>( pClient - m_pClients ) < m_uiMaxClients );
 					assert( pClient->IsConnected() );
 
-					printf( "Client disconnected\n" );
+					printf( "server: Client disconnected\n" );
 
 					m_pGameServer->ClientDisconnected( pClient->IsFullyConnected() );
 

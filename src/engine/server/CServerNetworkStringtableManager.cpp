@@ -16,48 +16,6 @@ CServerNetworkStringTableManager::CServerNetworkStringTableManager( CServer* con
 {
 }
 
-CNetworkStringTable* CServerNetworkStringTableManager::CreateTable( const char* const pszName )
-{
-	if( !pszName || !( *pszName ) )
-		return nullptr;
-
-	if( GetTableByName( pszName ) )
-		return nullptr;
-
-	auto pTable = new CNetworkStringTable( pszName, m_Tables.size() );
-
-	uint8_t bufData[ MAX_DATAGRAM ];
-
-	CNetworkBuffer buffer( "CServerNetworkStringTableManager::CreateTable_Buffer", bufData, sizeof( bufData ) );
-
-	WriteNetTableCreateMessage( pTable, buffer );
-
-	if( !buffer.HasOverflowed() )
-	{
-		m_Tables.push_back( pTable );
-
-		CSVClient* pClients = m_pServer->GetClients();
-
-		for( size_t uiIndex = 0; uiIndex < m_pServer->GetMaxClients(); ++uiIndex, ++pClients )
-		{
-			if( pClients->IsFullyConnected() )
-			{
-				pClients->SendMessage( buffer );
-			}
-		}
-
-		return pTable;
-	}
-	else
-	{
-		delete pTable;
-
-		printf( "CServerNetworkStringTableManager::CreateTable: Couldn't write table creation message for table %s!\n", pszName );
-
-		return nullptr;
-	}
-}
-
 void CServerNetworkStringTableManager::WriteNetTableCreateMessages( CNetworkBuffer& buffer )
 {
 	for( auto pTable : m_Tables )

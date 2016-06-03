@@ -5,6 +5,8 @@
 
 #include "networking/CNetworkBuffer.h"
 
+#include "PrivateNetStringTableConstants.h"
+
 #include "CNetworkStringTable.h"
 
 #include "CNetworkStringTableManager.h"
@@ -42,6 +44,27 @@ CNetworkStringTable* CNetworkStringTableManager::GetTableByName( const char* con
 	return const_cast<CNetworkStringTable*>( const_cast<const CNetworkStringTableManager* const>( this )->GetTableByName( pszName ) );
 }
 
+CNetworkStringTable* CNetworkStringTableManager::CreateTable( const char* const pszName )
+{
+	if( !pszName || !( *pszName ) )
+		return nullptr;
+
+	if( !TableCreationAllowed() )
+	{
+		printf( "Table creation is not allowed!\n" );
+		return nullptr;
+	}
+
+	if( GetTableByName( pszName ) )
+		return nullptr;
+
+	auto pTable = new CNetworkStringTable( pszName, NST::IndexToTableID( m_Tables.size() ) );
+
+	m_Tables.push_back( pTable );
+
+	return pTable;
+}
+
 void CNetworkStringTableManager::Clear()
 {
 	for( auto pTable : m_Tables )
@@ -70,11 +93,11 @@ bool CNetworkStringTableManager::Serialize( CNetworkBuffer& buffer, const float 
 	return bWroteSomething;
 }
 
-bool CNetworkStringTableManager::UnserializeTable( const CNetworkStringTable::TableID_t ID, CNetworkBuffer& buffer )
+bool CNetworkStringTableManager::UnserializeTable( const NST::TableID_t ID, CNetworkBuffer& buffer )
 {
 	bool bSuccess = false;
 
-	if( auto pTable = GetTableByIndex( ID ) )
+	if( auto pTable = GetTableByIndex( NST::TableIDToIndex( ID ) ) )
 	{
 		bSuccess = pTable->Unserialize( buffer );
 	}

@@ -121,6 +121,12 @@
     <Filter Include="Source Files\game\client">
       <UniqueIdentifier>{b21cb1cf-521f-4945-b0e7-d59d71ac1ff0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\networking\shared">
+      <UniqueIdentifier>{71d2cf2d-2606-4381-956a-63714fdc527d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\networking\shared\stringtable">
+      <UniqueIdentifier>{6a746428-c15c-4893-a33d-590cc5dc47da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -298,6 +304,18 @@
     </ClInclude>
     <ClInclude Include="..\src\utility\Tokenization.h">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\shared\stringtable\NetStringTableConstants.h">
+      <Filter>Header Files\networking\shared\stringtable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\shared\stringtable\INetworkStringTable.h">
+      <Filter>Header Files\networking\shared\stringtable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\shared\stringtable\INetworkStringTableManager.h">
+      <Filter>Header Files\networking\shared\stringtable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\networking\stringtable\PrivateNetStringTableConstants.h">
+      <Filter>Header Files\networking\stringtable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

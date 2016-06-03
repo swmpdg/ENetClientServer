@@ -15,15 +15,6 @@ void CClientNetworkStringTableManager::SetGameClient( IGameClientInterface* cons
 	m_pGameClient = pGameClient;
 }
 
-CNetworkStringTable* CClientNetworkStringTableManager::CreateTable( const char* const pszName )
-{
-	if( !pszName || !( *pszName ) )
-		return nullptr;
-
-	//Don't create, just return.
-	return GetTableByName( pszName );
-}
-
 void CClientNetworkStringTableManager::ProcessNetTableMessage( sv_cl_messages::NetTable& table )
 {
 	assert( m_pGameClient );
@@ -34,9 +25,20 @@ void CClientNetworkStringTableManager::ProcessNetTableMessage( sv_cl_messages::N
 		{
 			assert( sv_cl_messages::NetTable::kName == table.oneof_tableID_case() );
 
-			m_Tables.push_back( new CNetworkStringTable( g_StringPool.Allocate( table.name().c_str() ), m_Tables.size() ) );
+			SetAllowTableCreation( true );
 
-			m_pGameClient->OnNetworkStringTableCreated( m_Tables.back()->GetName(), *this );
+			auto pTable = CreateTable( g_StringPool.Allocate( table.name().c_str() ) );
+
+			SetAllowTableCreation( false );
+
+			if( pTable )
+			{
+				m_pGameClient->OnNetworkStringTableCreated( pTable->GetName(), *this );
+			}
+			else
+			{
+				printf( "Failed to create client network string table %s!\n", table.name().c_str() );
+			}
 
 			break;
 		}
