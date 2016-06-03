@@ -28,6 +28,16 @@ CNetworkStringTable::CNetworkStringTable( const char* const pszName, const NST::
 	assert( pszName && *pszName );
 }
 
+void CNetworkStringTable::SetStringAddedCallback( NST::StringAddedCallback pCallback )
+{
+	m_pStringAddedCallback = pCallback;
+}
+
+void CNetworkStringTable::SetStringAddedCallback( void* pObject )
+{
+	m_pStringAddedObject = pObject;
+}
+
 size_t CNetworkStringTable::IndexOf( const char* const pszString ) const
 {
 	if( !pszString )
@@ -253,4 +263,18 @@ bool CNetworkStringTable::Unserialize( CNetworkBuffer& buffer )
 	}
 
 	return !buffer.HasOverflowed();
+}
+
+void CNetworkStringTable::InvokeCallbackForChanges( const float flTime )
+{
+	if( !m_pStringAddedCallback )
+		return;
+
+	for( size_t uiIndex = 0; uiIndex < m_TableEntries.size(); ++uiIndex )
+	{
+		if( m_TableEntries[ uiIndex ].flLastModifiedTime >= flTime )
+		{
+			m_pStringAddedCallback( m_pStringAddedObject, this, uiIndex );
+		}
+	}
 }

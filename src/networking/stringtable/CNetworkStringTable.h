@@ -54,32 +54,22 @@ public:
 
 	size_t GetMaxEntries() const override final { return m_uiMaxEntries; }
 
-	/**
-	*	@return The number of strings that are in this table.
-	*/
 	size_t GetStringCount() const override final { return m_TableEntries.size(); }
 
-	/**
-	*	Gets the index of the given string.
-	*	@param pszString String to find.
-	*	@return Index of the string, or INVALID_INDEX if not found.
-	*/
+	NST::StringAddedCallback GetStringAddedCallback() const override final { return m_pStringAddedCallback; }
+
+	void SetStringAddedCallback( NST::StringAddedCallback pCallback ) override final;
+
+	void* GetStringAddedObject() const override final { return m_pStringAddedObject; }
+
+	void SetStringAddedCallback( void* pObject ) override final;
+
 	size_t IndexOf( const char* const pszString ) const override final;
 
-	/**
-	*	@return Whether the given index is valid or not.
-	*/
 	bool IsValidIndex( const size_t uiIndex ) const override final;
 
-	/**
-	*	@return String at the given index, or null if the index is invalid.
-	*/
 	const char* GetString( const size_t uiIndex ) const override final;
 
-	/**
-	*	Adds a string to the table. If the string is already in the table, does nothing.
-	*	@return Index of the string.
-	*/
 	size_t Add( const char* const pszString ) override final;
 
 	/**
@@ -107,6 +97,11 @@ public:
 	*/
 	bool Unserialize( CNetworkBuffer& buffer );
 
+	/**
+	*	Invokes the callback for all changes that have occurred since the given time.
+	*/
+	void InvokeCallbackForChanges( const float flTime );
+
 private:
 	const char* const m_pszName;
 	const NST::TableID_t m_TableID;
@@ -120,6 +115,9 @@ private:
 
 	//Last time the table was modified.
 	float m_flLastModifiedTime = 0;
+
+	NST::StringAddedCallback m_pStringAddedCallback = nullptr;
+	void* m_pStringAddedObject = nullptr;
 
 private:
 	CNetworkStringTable( const CNetworkStringTable& ) = delete;
