@@ -16,11 +16,17 @@ bool CGameClient::ClientConnected()
 	return true;
 }
 
+static void StringAddedCallback( void* pObject, INetworkStringTable* pTable, const size_t uiIndex )
+{
+	printf( "String \"%s\" added to \"%s\"\n", pTable->GetString( uiIndex ), pTable->GetName() );
+}
+
 void CGameClient::OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager )
 {
 	if( strcmp( pszName, "table" ) == 0 )
 	{
 		m_pClientTable = manager.GetTableByName( pszName );
+		m_pClientTable->SetStringAddedCallback( StringAddedCallback );
 	}
 	else if( strcmp( pszName, "table2" ) == 0 )
 	{

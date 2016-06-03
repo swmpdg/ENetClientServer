@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <cstdio>
 
+#include "utility/CWorldTime.h"
+
 #include "networking/NetworkConstants.h"
 
 #include "networking/CNetworkBuffer.h"
@@ -10,6 +12,8 @@
 #include "CNetworkStringTable.h"
 
 #include "CNetworkStringTableManager.h"
+
+#undef GetCurrentTime
 
 const CNetworkStringTable* CNetworkStringTableManager::GetTableByIndex( const size_t uiIndex ) const
 {
@@ -121,6 +125,11 @@ bool CNetworkStringTableManager::UnserializeTable( const NST::TableID_t ID, CNet
 	if( auto pTable = GetTableByIndex( NST::TableIDToIndex( ID ) ) )
 	{
 		bSuccess = pTable->Unserialize( buffer );
+
+		if( bSuccess )
+		{
+			pTable->InvokeCallbackForChanges( WorldTime.GetCurrentTime() );
+		}
 	}
 	else
 	{

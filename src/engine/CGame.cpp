@@ -153,13 +153,19 @@ bool CGame::RunGameLoop()
 						{
 							if( !m_Client.ClientCommand( command ) )
 							{
-								m_Server.ClientCommand( command );
+								if( !m_Server.ClientCommand( command ) )
+								{
+									printf( "Unknown command: %s\n", command.Arg( 0 ) );
+								}
 							}
 						}
 						else
 						{
 							//TODO: this shouldn't be here. These commands should be handled through the server console.
-							m_Server.ClientCommand( command );
+							if( !m_Server.ClientCommand( command ) )
+							{
+								printf( "Unknown command: %s\n", command.Arg( 0 ) );
+							}
 						}
 					}
 				}

@@ -32,6 +32,26 @@ public:
 	virtual size_t GetStringCount() const = 0;
 
 	/**
+	*	@return The string added callback, if any.
+	*/
+	virtual NST::StringAddedCallback GetStringAddedCallback() const = 0;
+
+	/**
+	*	Sets the callback that is invoked when a string is added.
+	*/
+	virtual void SetStringAddedCallback( NST::StringAddedCallback pCallback ) = 0;
+
+	/**
+	*	@return The user data object passed to the string added callback.
+	*/
+	virtual void* GetStringAddedObject() const = 0;
+
+	/**
+	*	Sets the user data object passed to the string added callback.
+	*/
+	virtual void SetStringAddedCallback( void* pObject ) = 0;
+
+	/**
 	*	Gets the index of the given string.
 	*	@param pszString String to find.
 	*	@return Index of the string, or INVALID_INDEX if not found.
