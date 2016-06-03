@@ -91,12 +91,11 @@ void protobuf_AddDesc_NetTable_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016NetTable.proto\022\016sv_cl_messages\"\255\001\n\010Net"
+    "\n\016NetTable.proto\022\016sv_cl_messages\"\241\001\n\010Net"
     "Table\0221\n\007command\030\001 \002(\0162 .sv_cl_messages."
     "NetTable.Command\022\016\n\004name\030\002 \001(\tH\000\022\021\n\007tabl"
-    "eID\030\003 \001(\rH\000\022\014\n\004data\030\004 \001(\014\",\n\007Command\022\n\n\006"
-    "CREATE\020\000\022\t\n\005CLEAR\020\001\022\n\n\006UPDATE\020\002B\017\n\roneof"
-    "_tableID", 208);
+    "eID\030\003 \001(\rH\000\022\014\n\004data\030\004 \001(\014\" \n\007Command\022\t\n\005"
+    "CLEAR\020\000\022\n\n\006UPDATE\020\001B\017\n\roneof_tableID", 196);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetTable.proto", &protobuf_RegisterTypes);
   NetTable::default_instance_ = new NetTable();
@@ -122,7 +121,6 @@ bool NetTable_Command_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
-    case 2:
       return true;
     default:
       return false;
@@ -130,7 +128,6 @@ bool NetTable_Command_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const NetTable_Command NetTable::CREATE;
 const NetTable_Command NetTable::CLEAR;
 const NetTable_Command NetTable::UPDATE;
 const NetTable_Command NetTable::Command_MIN;

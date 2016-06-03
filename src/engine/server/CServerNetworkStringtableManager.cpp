@@ -1,6 +1,6 @@
 #include "CServer.h"
 
-#include "messages/sv_cl_messages/NetTable.pb.h"
+#include "messages/sv_cl_messages/NetTables.pb.h"
 
 #include "networking/NetworkConstants.h"
 
@@ -18,19 +18,25 @@ CServerNetworkStringTableManager::CServerNetworkStringTableManager( CServer* con
 
 void CServerNetworkStringTableManager::WriteNetTableCreateMessages( CNetworkBuffer& buffer )
 {
+	sv_cl_messages::NetTables tables;
+
 	for( auto pTable : m_Tables )
 	{
-		WriteNetTableCreateMessage( pTable, buffer );
+		auto pTableField = tables.add_tables();
+
+		pTableField->set_name( pTable->GetName() );
 	}
+
+
+	SerializeToBuffer( SVCLMessage::NETTABLES, tables, buffer );
 }
 
-void CServerNetworkStringTableManager::WriteNetTableCreateMessage( const CNetworkStringTable* const pTable, CNetworkBuffer& buffer )
+bool CServerNetworkStringTableManager::WriteBaseline( const size_t uiTableIndex, const size_t uiStringIndex, const float flTime, CNetworkBuffer& buffer )
 {
-	sv_cl_messages::NetTable table;
+	auto pTable = GetTableByIndex( uiTableIndex );
 
-	table.set_command( sv_cl_messages::NetTable_Command_CREATE );
+	if( !pTable )
+		return false;
 
-	table.set_name( pTable->GetName() );
-
-	SerializeToBuffer( SVCLMessage::NETTABLE, table, buffer );
+	return pTable->Serialize( buffer, flTime, uiStringIndex );
 }

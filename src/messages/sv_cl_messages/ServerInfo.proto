@@ -1,0 +1,7 @@
+package sv_cl_messages;
+
+message ServerInfo
+{
+	required string ipAddress = 1;
+	required string hostName = 2;
+}

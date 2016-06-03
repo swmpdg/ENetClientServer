@@ -22,11 +22,25 @@ void CGameClient::OnNetworkStringTableCreated( const char* const pszName, INetwo
 	{
 		m_pClientTable = manager.GetTableByName( pszName );
 	}
+	else if( strcmp( pszName, "table2" ) == 0 )
+	{
+		m_pClientTable2 = manager.GetTableByName( pszName );
+	}
 }
 
 void CGameClient::ClientDisconnected( const bool bWasFullyConnected )
 {
 	printf( "client: Client disconnected\n" );
+}
+
+static void ListStrings( INetworkStringTable* pTable )
+{
+	printf( "Number of strings in table %s: %u\n", pTable->GetName(), pTable->GetStringCount() );
+
+	for( size_t uiIndex = 0; uiIndex < pTable->GetStringCount(); ++uiIndex )
+	{
+		printf( "String %u: %s\n", uiIndex, pTable->GetString( uiIndex ) );
+	}
 }
 
 bool CGameClient::ClientCommand( const CCommand& command )
@@ -35,12 +49,13 @@ bool CGameClient::ClientCommand( const CCommand& command )
 
 	if( strcmp( command.Arg( 0 ), "liststrings" ) == 0 )
 	{
-		printf( "Number of strings in table %s: %u\n", m_pClientTable->GetName(), m_pClientTable->GetStringCount() );
+		ListStrings( m_pClientTable );
 
-		for( size_t uiIndex = 0; uiIndex < m_pClientTable->GetStringCount(); ++uiIndex )
-		{
-			printf( "String %u: %s\n", uiIndex, m_pClientTable->GetString( uiIndex ) );
-		}
+		return true;
+	}
+	else if( strcmp( command.Arg( 0 ), "liststrings2" ) == 0 )
+	{
+		ListStrings( m_pClientTable2 );
 
 		return true;
 	}

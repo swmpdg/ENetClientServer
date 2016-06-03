@@ -4,8 +4,14 @@
 
 #include "networking/NetworkUtils.h"
 
+#include "networking/stringtable/PrivateNetStringTableConstants.h"
+
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
+#include "messages/sv_cl_messages/ServerInfo.pb.h"
+#include "messages/sv_cl_messages/NetTables.pb.h"
 #include "messages/sv_cl_messages/NetTable.pb.h"
+
+#include "messages/cl_sv_messages/ConnectionCmd.pb.h"
 
 #include "CCLServer.h"
 
@@ -36,21 +42,21 @@ void CCLServer::Initialize( ENetPeer* pPeer )
 
 void CCLServer::Connected()
 {
-	assert( m_State == CLServerConnState::CONNECTING );
+	assert( m_State == CLServerConnState::CONNECTED );
 
-	m_State = CLServerConnState::CONNECTED;
+	m_State = CLServerConnState::FULLYCONNECTED;
 }
 
 void CCLServer::PendingDisconnect()
 {
-	assert( m_State == CLServerConnState::CONNECTING || m_State == CLServerConnState::CONNECTED );
+	assert( m_State == CLServerConnState::CONNECTING || m_State == CLServerConnState::CONNECTED || m_State == CLServerConnState::FULLYCONNECTED );
 
 	m_State = CLServerConnState::PENDINGDISCONNECT;
 }
 
 void CCLServer::Reset()
 {
-	assert( IsConnected() );
+	assert( m_State != CLServerConnState::NOTCONNECTED );
 	assert( m_pPeer );
 	assert( m_pPeer->data == this );
 
@@ -61,6 +67,9 @@ void CCLServer::Reset()
 	m_State = CLServerConnState::NOTCONNECTED;
 
 	m_NetworkStringTableManager.Clear();
+
+	memset( m_szIPAddress, 0, sizeof( m_szIPAddress ) );
+	memset( m_szHostName, 0, sizeof( m_szHostName ) );
 }
 
 void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
@@ -83,7 +92,7 @@ void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
 
 bool CCLServer::SendMessage( const CLSVMessage messageId, google::protobuf::Message& message )
 {
-	assert( IsFullyConnected() );
+	assert( IsConnected() );
 
 	return SerializeToBuffer( messageId, message, m_MessageBuffer );
 }
@@ -117,6 +126,46 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 			break;
 		}
 
+	case SVCLMessage::SERVERINFO:
+		{
+			sv_cl_messages::ServerInfo serverInfo;
+
+			serverInfo.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+
+			strncpy( m_szIPAddress, serverInfo.ipaddress().c_str(), sizeof( m_szIPAddress ) );
+
+			m_szIPAddress[ sizeof( m_szIPAddress ) - 1 ] = '\0';
+
+			strncpy( m_szHostName, serverInfo.hostname().c_str(), sizeof( m_szHostName ) );
+
+			m_szHostName[ sizeof( m_szHostName ) - 1 ] = '\0';
+
+			cl_sv_messages::ConnectionCmd connCmd;
+
+			connCmd.set_stage( static_cast<uint8_t>( ClientConnStage::SERVER_INFO ) );
+
+			SendMessage( CLSVMessage::CONNECTIONCMD, connCmd );
+
+			break;
+		}
+
+	case SVCLMessage::NETTABLES:
+		{
+			sv_cl_messages::NetTables tables;
+
+			tables.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+
+			m_NetworkStringTableManager.ProcessNetTablesMessage( tables );
+
+			cl_sv_messages::ConnectionCmd connCmd;
+
+			connCmd.set_stage( static_cast<uint8_t>( ClientConnStage::NETTABLES ) );
+
+			SendMessage( CLSVMessage::CONNECTIONCMD, connCmd );
+
+			break;
+		}
+
 	case SVCLMessage::NETTABLE:
 		{
 			sv_cl_messages::NetTable table;
@@ -124,6 +173,35 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 			table.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
 
 			m_NetworkStringTableManager.ProcessNetTableMessage( table );
+
+			if( m_State == CLServerConnState::CONNECTED )
+			{
+				cl_sv_messages::ConnectionCmd connCmd;
+
+				connCmd.set_stage( static_cast<uint8_t>( ClientConnStage::NETTABLES ) );
+
+				switch( table.command() )
+				{
+				case sv_cl_messages::NetTable_Command_UPDATE:
+					{
+						auto pStateField = connCmd.mutable_nettablestate();
+
+						pStateField->set_tableid( table.tableid() );
+						pStateField->set_stringindex( m_NetworkStringTableManager.GetTableByIndex( NST::TableIDToIndex( table.tableid() ) )->GetStringCount() );
+
+						break;
+					}
+				}
+
+				SendMessage( CLSVMessage::CONNECTIONCMD, connCmd );
+			}
+
+			break;
+		}
+
+	case SVCLMessage::FULLYCONNECTED:
+		{
+			Connected();
 
 			break;
 		}

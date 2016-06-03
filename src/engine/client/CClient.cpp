@@ -6,6 +6,8 @@
 
 #include "game/shared/client/IGameClientInterface.h"
 
+#include "messages/Noop.pb.h"
+
 #include "CClient.h"
 
 CClient::~CClient()
@@ -140,8 +142,7 @@ void CClient::ProcessNetworkEvents()
 
 				if( m_pGameClient->ClientConnected() )
 				{
-					//TODO: this should be called when the client has finished connecting (got server info, downloaded resources, etc).
-					m_Server.Connected();
+					m_Server.SetConnectionState( CLServerConnState::CONNECTED );
 				}
 				else
 				{
@@ -157,7 +158,7 @@ void CClient::ProcessNetworkEvents()
 				{
 					CCLServer* const pServer = reinterpret_cast<CCLServer*>( event.peer->data );
 
-					assert( pServer->IsConnected() );
+					assert( pServer->GetConnectionState() != CLServerConnState::NOTCONNECTED );
 
 					m_pGameClient->ClientDisconnected( pServer->IsFullyConnected() );
 
@@ -187,17 +188,25 @@ void CClient::ProcessPacket( CCLServer& server, ENetPacket* pPacket )
 
 void CClient::DispatchServerMessages()
 {
-	if( m_Server.IsFullyConnected() )
+	if( m_Server.IsConnected() )
 	{
 		auto& buffer = m_Server.GetMessageBuffer();
 
-		ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
+		//Ensure the buffer is never empty.
+		if( buffer.GetBitsInBuffer() == 0 )
+		{
+			messages::Noop noop;
 
-		buffer.ResetToStart();
+			m_Server.SendMessage( CLSVMessage::NOOP, noop );
+		}
+
+		ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
 
 		if( enet_peer_send( m_Server.GetPeer(), NetChannel::DATA, pPacket ) != 0 )
 		{
 			printf( "Error while sending packet to server!\n" );
 		}
+
+		buffer.ResetToStart();
 	}
 }

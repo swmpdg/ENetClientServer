@@ -104,8 +104,13 @@
     <ClCompile Include="..\src\lib\LibInterface.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\messages\cl_sv_messages\ClientCmd.pb.cc" />
+    <ClCompile Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.cc" />
+    <ClCompile Include="..\src\messages\Noop.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
+    <ClCompile Include="..\src\messages\sv_cl_messages\FullyConnected.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc" />
+    <ClCompile Include="..\src\messages\sv_cl_messages\NetTables.pb.cc" />
+    <ClCompile Include="..\src\messages\sv_cl_messages\ServerInfo.pb.cc" />
     <ClCompile Include="..\src\networking\CNetBufInputStream.cpp" />
     <ClCompile Include="..\src\networking\CNetBufOutputStream.cpp" />
     <ClCompile Include="..\src\networking\CNetworkBuffer.cpp" />
@@ -135,8 +140,13 @@
     <ClInclude Include="..\src\game\shared\server\IGameServerInterface.h" />
     <ClInclude Include="..\src\lib\LibInterface.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
+    <ClInclude Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.h" />
+    <ClInclude Include="..\src\messages\Noop.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
+    <ClInclude Include="..\src\messages\sv_cl_messages\FullyConnected.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h" />
+    <ClInclude Include="..\src\messages\sv_cl_messages\NetTables.pb.h" />
+    <ClInclude Include="..\src\messages\sv_cl_messages\ServerInfo.pb.h" />
     <ClInclude Include="..\src\networking\CNetBufInputStream.h" />
     <ClInclude Include="..\src\networking\CNetBufOutputStream.h" />
     <ClInclude Include="..\src\networking\CNetworkBuffer.h" />

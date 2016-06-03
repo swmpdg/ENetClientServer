@@ -1,18 +1,30 @@
 #include <cassert>
 #include <memory>
 
+#include <enet/enet.h>
+
 #include "networking/CNetworkBuffer.h"
 
 #include "networking/NetworkUtils.h"
 
+#include "networking/stringtable/PrivateNetStringTableConstants.h"
+
 #include "utility/CWorldTime.h"
+
+#include "shared/Utility.h"
+
+#include "game/shared/server/IGameServerInterface.h"
 
 #include "CServer.h"
 
-#include "CServerNetworkStringtableManager.h"
+#include "CServerNetworkStringTableManager.h"
+
+#include "messages/sv_cl_messages/ClientPrint.pb.h"
+#include "messages/sv_cl_messages/ServerInfo.pb.h"
+#include "messages/sv_cl_messages/FullyConnected.pb.h"
 
 #include "messages/cl_sv_messages/ClientCmd.pb.h"
-#include "messages/sv_cl_messages/ClientPrint.pb.h"
+#include "messages/cl_sv_messages/ConnectionCmd.pb.h"
 
 #include "CSVClient.h"
 
@@ -43,11 +55,37 @@ void CSVClient::Initialize( ENetPeer* pPeer )
 
 	m_MessageBuffer.ResetToStart();
 
-	m_bHasNetTables = false;
+	m_flConnectTime = WorldTime.GetCurrentTime();
 
 	m_flLastMessageTime = 0;
 
 	m_flLastNetTableTime = 0;
+}
+
+void CSVClient::SendServerInfo( CServer& server )
+{
+	assert( m_State == SVClientConnState::CONNECTING );
+
+	sv_cl_messages::ServerInfo serverInfo;
+
+	ENetAddress address;
+
+	//TODO: drop client on failure.
+	if( enet_address_set_host( &address, "localhost" ) < 0 )
+		return;
+
+	char szIPAddress[ MAX_BUFFER_LENGTH ];
+
+	if( enet_address_get_host_ip( &address, szIPAddress, sizeof( szIPAddress ) ) < 0 )
+		return;
+
+	serverInfo.set_ipaddress( szIPAddress );
+	//TODO: get host name from somewhere
+	serverInfo.set_hostname( "my host name" );
+
+	SendMessage( SVCLMessage::SERVERINFO, serverInfo );
+
+	m_ConnectionStage = ClientConnStage::SERVER_INFO;
 }
 
 void CSVClient::Connected()
@@ -55,6 +93,14 @@ void CSVClient::Connected()
 	assert( m_State == SVClientConnState::CONNECTING );
 
 	m_State = SVClientConnState::CONNECTED;
+
+	sv_cl_messages::FullyConnected conn;
+
+	SendMessage( SVCLMessage::FULLYCONNECTED, conn );
+
+	//Sends any changes made during connection.
+	//TODO: if a large amount of changes were made, this could cause overflows.
+	m_flLastNetTableTime = m_flConnectTime;
 }
 
 void CSVClient::Reset()
@@ -68,8 +114,6 @@ void CSVClient::Reset()
 	m_pPeer = nullptr;
 
 	m_State = SVClientConnState::FREE;
-
-	m_bHasNetTables = false;
 
 	m_flLastMessageTime = 0;
 
@@ -88,17 +132,7 @@ bool CSVClient::SendMessage( const CNetworkBuffer& buffer )
 
 void CSVClient::SendNetTableUpdates( CServerNetworkStringTableManager& manager )
 {
-	const bool bHadNetTables = HasNetTables();
-
-	if( !HasNetTables() )
-	{
-		//TODO: can overflow.
-		manager.WriteNetTableCreateMessages( GetMessageBuffer() );
-
-		SetHasNetTables( true );
-	}
-
-	manager.Serialize( GetMessageBuffer(), bHadNetTables ? m_flLastNetTableTime : 0 );
+	manager.Serialize( GetMessageBuffer(), m_flLastNetTableTime );
 
 	m_flLastNetTableTime = WorldTime.GetCurrentTime();
 }
@@ -150,7 +184,77 @@ void CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 
 			break;
 		}
+
+	case CLSVMessage::CONNECTIONCMD:
+		{
+			cl_sv_messages::ConnectionCmd connCmd;
+
+			connCmd.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+
+			const auto connStage = static_cast<ClientConnStage>( connCmd.stage() );
+
+			assert( m_ConnectionStage == connStage );
+
+			switch( connStage )
+			{
+			case ClientConnStage::SERVER_INFO:
+				{
+					//Server info received, move on to net tables.
+					m_ConnectionStage = ClientConnStage::NETTABLES;
+
+					server.GetNetStringTableManager().WriteNetTableCreateMessages( GetMessageBuffer() );
+
+					break;
+				}
+
+			case ClientConnStage::NETTABLES:
+				{
+					if( !SendNetTables( server.GetNetStringTableManager(), connCmd ) )
+					{
+						m_ConnectionStage = ClientConnStage::NONE;
+
+						Connected();
+
+						server.GetGameServer()->ClientPutInServer();
+					}
+
+					break;
+				}
+			}
+
+			break;
+		}
 	}
 
 	buffer.ReadAndDiscardBytes( uiMessageSize );
+}
+
+bool CSVClient::SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd )
+{
+	size_t uiTable = 0;
+
+	size_t uiFirstString = 0;
+
+	if( connCmd.has_nettablestate() )
+	{
+		const auto& state = connCmd.nettablestate();
+
+		uiTable = NST::TableIDToIndex( state.tableid() );
+		uiFirstString = state.stringindex();
+	}
+
+	bool bSent = false;
+
+	while( manager.GetTableByIndex( uiTable ) )
+	{
+		bSent = manager.WriteBaseline( uiTable, uiFirstString, 0, GetMessageBuffer() );
+
+		if( bSent )
+			break;
+
+		++uiTable;
+		uiFirstString = 0;
+	}
+
+	return bSent;
 }

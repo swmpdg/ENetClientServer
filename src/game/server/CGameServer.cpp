@@ -13,6 +13,9 @@ REGISTER_SINGLE_INTERFACE( IGAMESERVERINTERFACE_NAME, CGameServer );
 void CGameServer::CreateNetworkStringTables( INetworkStringTableManager& manager )
 {
 	m_pServerTable = manager.CreateTable( "table" );
+	auto pTable = manager.CreateTable( "table2" );
+
+	pTable->Add( "string for 2nd table" );
 }
 
 bool CGameServer::ClientConnect( char* pszRejectReason, const size_t uiRejectSizeInBytes )

@@ -5,6 +5,8 @@
 
 #include <enet/enet.h>
 
+#include "shared/Utility.h"
+
 #include "networking/NetworkConstants.h"
 
 #include "networking/CNetworkBuffer.h"
@@ -22,6 +24,7 @@ enum class CLServerConnState
 	NOTCONNECTED = 0,
 	CONNECTING,
 	CONNECTED,
+	FULLYCONNECTED,
 	PENDINGDISCONNECT
 };
 
@@ -47,14 +50,21 @@ public:
 	CLServerConnState GetConnectionState() const { return m_State; }
 
 	/**
+	*	Sets the server connection state.
+	*/
+	void SetConnectionState( const CLServerConnState state ) { m_State = state; }
+
+	/**
 	*	@return Whether the local client is connected to this server in any way.
 	*/
-	bool IsConnected() const { return m_State == CLServerConnState::CONNECTING || m_State == CLServerConnState::CONNECTED || m_State == CLServerConnState::PENDINGDISCONNECT; }
+	bool IsConnected() const { return 
+		m_State == CLServerConnState::CONNECTED || 
+		m_State == CLServerConnState::FULLYCONNECTED; }
 
 	/**
 	*	@return Whether the local client is fully connected to this server.
 	*/
-	bool IsFullyConnected() const { return m_State == CLServerConnState::CONNECTED; }
+	bool IsFullyConnected() const { return m_State == CLServerConnState::FULLYCONNECTED; }
 
 	/**
 	*	@return The network peer.
@@ -75,6 +85,16 @@ public:
 	*	@return The client's network string table manager.
 	*/
 	CClientNetworkStringTableManager& GetNetStringTableManager() { return m_NetworkStringTableManager; }
+
+	/**
+	*	@return This server's IP address.
+	*/
+	const char* GetIPAddress() const { return m_szIPAddress; }
+
+	/**
+	*	This server's host name.
+	*/
+	const char* GetHostName() const { return m_szHostName; }
 
 	/**
 	*	Initializes this server handler.
@@ -130,6 +150,10 @@ private:
 	CNetworkBuffer m_MessageBuffer;
 
 	CClientNetworkStringTableManager m_NetworkStringTableManager;
+
+	char m_szIPAddress[ MAX_BUFFER_LENGTH ] = { '\0' };
+
+	char m_szHostName[ MAX_BUFFER_LENGTH ] = { '\0' };
 
 private:
 	CCLServer( const CCLServer& ) = delete;

@@ -17,6 +17,11 @@ class CServer;
 
 class CServerNetworkStringTableManager;
 
+namespace cl_sv_messages
+{
+class ConnectionCmd;
+}
+
 /**
 *	The server's client's connection state.
 */
@@ -50,6 +55,11 @@ public:
 	SVClientConnState GetConnectionState() const { return m_State; }
 
 	/**
+	*	@return If the client is currently connecting to the server, the client's connection stage.
+	*/
+	ClientConnStage GetConnectionStage() const { return m_ConnectionStage; }
+
+	/**
 	*	@return Whether this client is connected to this server in any way.
 	*/
 	bool IsConnected() const { return m_State == SVClientConnState::CONNECTING || m_State == SVClientConnState::CONNECTED || m_State == SVClientConnState::PENDINGDISCONNECT; }
@@ -75,18 +85,9 @@ public:
 	CNetworkBuffer& GetMessageBuffer() { return m_MessageBuffer; }
 
 	/**
-	*	@return Whether this client has received all net tables or not.
+	*	@return The time at which the client connected.
 	*/
-	bool HasNetTables() const { return m_bHasNetTables; }
-
-	/**
-	*	Sets whether this client has received all net tables or not.
-	*	@see HasNetTables() const
-	*/
-	void SetHasNetTables( const bool bHasNetTables )
-	{
-		m_bHasNetTables = bHasNetTables;
-	}
+	float GetConnectTime() const { return m_flConnectTime; }
 
 	/**
 	*	@return The last time we sent a message to this client.
@@ -109,6 +110,11 @@ public:
 	*	@param pPeer Peer to associate with this client.
 	*/
 	void Initialize( ENetPeer* pPeer );
+
+	/**
+	*	Sends server info to this client. Only valid during connecting state.
+	*/
+	void SendServerInfo( CServer& server );
 
 	/**
 	*	Called when the client finishes connecting.
@@ -154,8 +160,19 @@ private:
 	*/
 	void ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
 
+	/**
+	*	Sends all network string tables to the client. Data is spread out over multiple messages if necessary, requiring multiple calls to this method.
+	*	@return true if data was sent, false otherwise.
+	*/
+	bool SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd );
+
 private:
 	SVClientConnState m_State = SVClientConnState::FREE;
+
+	/**
+	*	If the client is connecting to the server (SVClientConnState::CONNECTING), this is the connection stage it is current at.
+	*/
+	ClientConnStage m_ConnectionStage = ClientConnStage::NONE;
 
 	ENetPeer* m_pPeer = nullptr;
 
@@ -163,7 +180,7 @@ private:
 
 	CNetworkBuffer m_MessageBuffer;
 
-	bool m_bHasNetTables = false;
+	float m_flConnectTime = 0;
 
 	float m_flLastMessageTime = 0;
 

@@ -1,0 +1,14 @@
+package cl_sv_messages;
+
+message ConnectionCmd
+{
+	required uint32 stage = 1;
+	
+	message NetTableState
+	{
+		required uint32 tableID = 1;
+		required uint32 stringIndex = 2;
+	}
+	
+	optional NetTableState netTableState = 2;
+}

@@ -194,10 +194,7 @@ void CServer::ProcessNetworkEvents()
 
 							printf( "Client connected\n" );
 
-							//TODO: This should be called after the client has finished connecting (got server info, downloaded files, etc)
-							client.Connected();
-
-							m_pGameServer->ClientPutInServer();
+							client.SendServerInfo( *this );
 						}
 						else
 						{
@@ -274,7 +271,7 @@ void CServer::DispatchClientMessages()
 	{
 		auto& client = m_pClients[ uiIndex ];
 
-		if( client.IsFullyConnected() )
+		if( client.IsConnected() )
 		{
 			auto& buffer = client.GetMessageBuffer();
 

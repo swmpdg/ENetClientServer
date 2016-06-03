@@ -20,6 +20,7 @@ public:
 
 private:
 	INetworkStringTable* m_pClientTable = nullptr;
+	INetworkStringTable* m_pClientTable2 = nullptr;
 
 private:
 	CGameClient( const CGameClient& ) = delete;

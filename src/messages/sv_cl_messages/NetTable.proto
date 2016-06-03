@@ -4,9 +4,8 @@ message NetTable
 {
 	enum Command
 	{
-		CREATE = 0;
-		CLEAR = 1;
-		UPDATE = 2;
+		CLEAR = 0;
+		UPDATE = 1;
 	}
 	
 	required Command command = 1;

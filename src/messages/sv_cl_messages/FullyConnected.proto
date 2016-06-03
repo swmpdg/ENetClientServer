@@ -1,0 +1,5 @@
+package sv_cl_messages;
+
+message FullyConnected
+{
+}

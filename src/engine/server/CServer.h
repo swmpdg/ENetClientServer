@@ -42,6 +42,8 @@ public:
 	*/
 	bool IsInitialized() const { return m_bInitialized; }
 
+	ENetHost* GetHost() { return m_pHost; }
+
 	/**
 	*	@return Array of clients.
 	*/
@@ -55,7 +57,12 @@ public:
 	/**
 	*	@return The server's network string table manager.
 	*/
-	CNetworkStringTableManager& GetNetStringTableManager() { return m_NetStringTableManager; }
+	CServerNetworkStringTableManager& GetNetStringTableManager() { return m_NetStringTableManager; }
+
+	/**
+	*	@return Game server interface.
+	*/
+	IGameServerInterface* GetGameServer() { return m_pGameServer; }
 
 	/**
 	*	Connects the server with any systems it needs access to.

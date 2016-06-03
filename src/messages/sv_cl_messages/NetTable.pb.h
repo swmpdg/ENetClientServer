@@ -37,12 +37,11 @@ void protobuf_ShutdownFile_NetTable_2eproto();
 class NetTable;
 
 enum NetTable_Command {
-  NetTable_Command_CREATE = 0,
-  NetTable_Command_CLEAR = 1,
-  NetTable_Command_UPDATE = 2
+  NetTable_Command_CLEAR = 0,
+  NetTable_Command_UPDATE = 1
 };
 bool NetTable_Command_IsValid(int value);
-const NetTable_Command NetTable_Command_Command_MIN = NetTable_Command_CREATE;
+const NetTable_Command NetTable_Command_Command_MIN = NetTable_Command_CLEAR;
 const NetTable_Command NetTable_Command_Command_MAX = NetTable_Command_UPDATE;
 const int NetTable_Command_Command_ARRAYSIZE = NetTable_Command_Command_MAX + 1;
 
@@ -116,7 +115,6 @@ class NetTable : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef NetTable_Command Command;
-  static const Command CREATE = NetTable_Command_CREATE;
   static const Command CLEAR = NetTable_Command_CLEAR;
   static const Command UPDATE = NetTable_Command_UPDATE;
   static inline bool Command_IsValid(int value) {

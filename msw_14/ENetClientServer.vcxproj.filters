@@ -207,6 +207,21 @@
     <ClCompile Include="..\src\utility\Tokenization.cpp">
       <Filter>Source Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\messages\sv_cl_messages\ServerInfo.pb.cc">
+      <Filter>Source Files\messages\sv_cl_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.cc">
+      <Filter>Source Files\messages\cl_sv_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\sv_cl_messages\FullyConnected.pb.cc">
+      <Filter>Source Files\messages\sv_cl_messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\Noop.pb.cc">
+      <Filter>Source Files\messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\messages\sv_cl_messages\NetTables.pb.cc">
+      <Filter>Source Files\messages\sv_cl_messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h">
@@ -316,6 +331,21 @@
     </ClInclude>
     <ClInclude Include="..\src\networking\stringtable\PrivateNetStringTableConstants.h">
       <Filter>Header Files\networking\stringtable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\sv_cl_messages\ServerInfo.pb.h">
+      <Filter>Header Files\messages\sv_cl_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.h">
+      <Filter>Header Files\messages\cl_sv_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\sv_cl_messages\FullyConnected.pb.h">
+      <Filter>Header Files\messages\sv_cl_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\Noop.pb.h">
+      <Filter>Header Files\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\sv_cl_messages\NetTables.pb.h">
+      <Filter>Header Files\messages\sv_cl_messages</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

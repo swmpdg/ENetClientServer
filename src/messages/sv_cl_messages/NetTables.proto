@@ -1,0 +1,11 @@
+package sv_cl_messages;
+
+message NetTables
+{
+	message Table
+	{
+		required string name = 1;
+	}
+	
+	repeated Table tables = 1;
+}

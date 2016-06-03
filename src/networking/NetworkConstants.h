@@ -73,6 +73,27 @@ enum SVDisconnectCode : enet_uint32
 }
 
 /**
+*	Connection stages for clients connecting to the server.
+*/
+enum class ClientConnStage : uint8_t
+{
+	/**
+	*	The client is not in the connecting state.
+	*/
+	NONE = 0,
+
+	/**
+	*	Currently receiving server info.
+	*/
+	SERVER_INFO,
+
+	/**
+	*	Currently receiving network string tables
+	*/
+	NETTABLES,
+};
+
+/**
 *	Client to Server messages.
 */
 enum class CLSVMessage : uint8_t
@@ -91,6 +112,11 @@ enum class CLSVMessage : uint8_t
 	*	Executes a client command.
 	*/
 	CLIENTCMD,
+
+	/**
+	*	A connection command. Used to indicate successful receipt of data.
+	*/
+	CONNECTIONCMD,
 };
 
 /**
@@ -114,9 +140,24 @@ enum class SVCLMessage : uint8_t
 	CLIENTPRINT,
 
 	/**
+	*	Server info message.
+	*/
+	SERVERINFO,
+
+	/**
+	*	Net tables creation message.
+	*/
+	NETTABLES,
+
+	/**
 	*	Network string table message.
 	*/
 	NETTABLE,
+
+	/**
+	*	Informs the client that they are fully connected.
+	*/
+	FULLYCONNECTED,
 };
 
 /**
