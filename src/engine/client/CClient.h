@@ -15,6 +15,7 @@
 #undef SendMessage
 
 class IGameClientInterface;
+class CCommand;
 
 /**
 *	The client's representation of itself.
@@ -25,7 +26,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CClient() = default;
+	CClient();
 
 	/**
 	*	Destructor.
@@ -78,6 +79,11 @@ public:
 	*	@return true on success, false otherwise.
 	*/
 	bool ConnectToServer( const char* pszAddress, const enet_uint16 port );
+
+	/**
+	*	Called by the server when the client has connected to it.
+	*/
+	void Connected();
 
 	/**
 	*	If connected to a server, disconnects from the server.

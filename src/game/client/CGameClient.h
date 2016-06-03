@@ -14,6 +14,8 @@ public:
 
 	void OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager ) override final;
 
+	void ClientPutInServer() override final;
+
 	void ClientDisconnected( const bool bWasFullyConnected ) override final;
 
 	bool ClientCommand( const CCommand& command ) override final;

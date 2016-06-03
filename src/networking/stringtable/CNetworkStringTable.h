@@ -5,6 +5,8 @@
 
 #include "networking/shared/stringtable/INetworkStringTable.h"
 
+#include "PrivateNetStringTableConstants.h"
+
 class CNetworkBuffer;
 
 /**
@@ -95,7 +97,7 @@ public:
 	*	@param uiStart Index to start at.
 	*	@return true if any data was written, false otherwise.
 	*/
-	bool Serialize( CNetworkBuffer& buffer, const float flTime, const size_t uiStart = 0 );
+	NST::SerializeResult Serialize( CNetworkBuffer& buffer, const float flTime, const size_t uiStart = 0, const bool bAllowOverflow = false );
 
 	/**
 	*	Unserializes the given buffer into this table.

@@ -10,6 +10,11 @@
 
 #include "CClient.h"
 
+CClient::CClient()
+	: m_Server( *this )
+{
+}
+
 CClient::~CClient()
 {
 	assert( !m_pHost );
@@ -89,6 +94,13 @@ bool CClient::ConnectToServer( const char* pszAddress, const enet_uint16 port )
 	return true;
 }
 
+void CClient::Connected()
+{
+	m_pGameClient->ClientPutInServer();
+
+	printf( "Connected to server %s(%s)\n", m_Server.GetHostName(), m_Server.GetIPAddress() );
+}
+
 void CClient::DisconnectFromServer()
 {
 	if( !IsConnected() )
@@ -162,6 +174,21 @@ void CClient::ProcessNetworkEvents()
 
 					m_pGameClient->ClientDisconnected( pServer->IsFullyConnected() );
 
+					const char* pszReason;
+
+					auto pszDisconnectReason = m_Server.GetDisconnectReason();
+
+					if( pszDisconnectReason && *pszDisconnectReason )
+					{
+						pszReason = pszDisconnectReason;
+					}
+					else
+					{
+						pszReason = SVDisconnectCode::ToString( static_cast<SVDisconnectCode::SVDisconnectCode>( event.data ) );
+					}
+
+					printf( "You have been disconnect from the server.\nThe reason given was:\n%s\n", pszReason );
+
 					pServer->Reset();
 				}
 
@@ -171,6 +198,8 @@ void CClient::ProcessNetworkEvents()
 		case ENET_EVENT_TYPE_RECEIVE:
 			{
 				ProcessPacket( *reinterpret_cast<CCLServer*>( event.peer->data ), event.packet );
+
+				enet_packet_destroy( event.packet );
 				break;
 			}
 		}

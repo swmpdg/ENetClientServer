@@ -1,8 +1,10 @@
-#include "NetworkConstants.h"
+#include <cstdint>
 
 #include "CNetworkBuffer.h"
 
 #include "CNetBufOutputStream.h"
+
+#include "messages/sv_cl_messages/Disconnect.pb.h"
 
 #include "NetworkUtils.h"
 
@@ -29,4 +31,37 @@ bool SerializeToBuffer( const int iMessageId, const google::protobuf::Message& m
 	}
 
 	return true;
+}
+
+namespace NET
+{
+void DisconnectWithReason( ENetPeer* pPeer, const SVDisconnectCode::SVDisconnectCode disconnectCode, const char* const pszReason )
+{
+	assert( pPeer );
+
+	//TODO: send reason
+
+	if( pszReason && *pszReason )
+	{
+		uint8_t uiMsgBuf[ MAX_DATAGRAM ];
+
+		CNetworkBuffer msgBuffer( "DisconnectWithReason_buffer", uiMsgBuf, sizeof( uiMsgBuf ) );
+
+		sv_cl_messages::Disconnect disconnect;
+
+		disconnect.set_reason( pszReason );
+
+		SerializeToBuffer( SVCLMessage::DISCONNECT, disconnect, msgBuffer );
+
+		auto pPacket = enet_packet_create( msgBuffer.GetData(), msgBuffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
+
+		if( enet_peer_send( pPeer, NetChannel::DATA, pPacket ) != 0 )
+		{
+			printf( "DisconnectWithReason: Error while sending packet!\n" );
+		}
+	}
+
+	//Disconnect later so all remaining packets are sent (i.e. the above).
+	enet_peer_disconnect_later( pPeer, disconnectCode );
+}
 }

@@ -31,12 +31,12 @@ void CServerNetworkStringTableManager::WriteNetTableCreateMessages( CNetworkBuff
 	SerializeToBuffer( SVCLMessage::NETTABLES, tables, buffer );
 }
 
-bool CServerNetworkStringTableManager::WriteBaseline( const size_t uiTableIndex, const size_t uiStringIndex, const float flTime, CNetworkBuffer& buffer )
+NST::SerializeResult CServerNetworkStringTableManager::WriteBaseline( const size_t uiTableIndex, const size_t uiStringIndex, const float flTime, CNetworkBuffer& buffer )
 {
 	auto pTable = GetTableByIndex( uiTableIndex );
 
 	if( !pTable )
-		return false;
+		return NST::SerializeResult::WROTENOTHING;
 
-	return pTable->Serialize( buffer, flTime, uiStringIndex );
+	return pTable->Serialize( buffer, flTime, uiStringIndex, true );
 }

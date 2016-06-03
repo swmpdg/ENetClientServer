@@ -3,6 +3,8 @@
 
 #include "networking/shared/stringtable/NetStringTableConstants.h"
 
+#undef OVERFLOW
+
 namespace NetStringTable
 {
 /**
@@ -26,6 +28,13 @@ inline TableID_t IndexToTableID( const size_t uiIndex )
 
 	return uiIndex + 1;
 }
+
+enum class SerializeResult
+{
+	WROTEDATA = 0,
+	WROTENOTHING,
+	OVERFLOW
+};
 }
 
 #endif //NETWORKING_STRINGTABLE_PRIVATE_NETSTRINGTABLECONSTANTS_H

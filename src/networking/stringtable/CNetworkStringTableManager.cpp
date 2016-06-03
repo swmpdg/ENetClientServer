@@ -75,22 +75,28 @@ void CNetworkStringTableManager::Clear()
 	m_Tables.clear();
 }
 
-bool CNetworkStringTableManager::Serialize( CNetworkBuffer& buffer, const float flTime )
+NST::SerializeResult CNetworkStringTableManager::Serialize( CNetworkBuffer& buffer, const float flTime )
 {
-	bool bWroteSomething = false;
+	NST::SerializeResult result = NST::SerializeResult::WROTENOTHING;
 
 	for( auto pTable : m_Tables )
 	{
 		if( buffer.HasOverflowed() )
 			break;
 
-		if( pTable->Serialize( buffer, flTime, 0 ) )
+		const auto tblResult = pTable->Serialize( buffer, flTime, 0 );
+
+		if( tblResult == NST::SerializeResult::WROTEDATA )
 		{
-			bWroteSomething = true;
+			result = NST::SerializeResult::WROTEDATA;
+		}
+		else if( tblResult == NST::SerializeResult::OVERFLOW )
+		{
+			return NST::SerializeResult::OVERFLOW;
 		}
 	}
 
-	return bWroteSomething;
+	return result;
 }
 
 bool CNetworkStringTableManager::UnserializeTable( const NST::TableID_t ID, CNetworkBuffer& buffer )

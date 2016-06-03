@@ -1,0 +1,6 @@
+package sv_cl_messages;
+
+message Disconnect
+{
+	required string reason = 1;
+}

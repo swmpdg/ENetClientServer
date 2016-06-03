@@ -69,7 +69,14 @@ enum SVDisconnectCode : enet_uint32
 	*	Connection rejected by server.
 	*/
 	CONNECTION_REJECTED,
+
+	/**
+	*	Reliable channel overflowed.
+	*/
+	RELIABLE_CHANNEL_OVERFLOW,
 };
+
+const char* ToString( const SVDisconnectCode code );
 }
 
 /**
@@ -158,6 +165,11 @@ enum class SVCLMessage : uint8_t
 	*	Informs the client that they are fully connected.
 	*/
 	FULLYCONNECTED,
+
+	/**
+	*	Message explaining disconnect.
+	*/
+	DISCONNECT,
 };
 
 /**

@@ -181,6 +181,8 @@ void CServer::ProcessNetworkEvents()
 
 					if( !client.IsConnected() )
 					{
+						bAssignedSlot = true;
+
 						//TODO: assign edict
 						client.Initialize( event.peer );
 
@@ -190,17 +192,13 @@ void CServer::ProcessNetworkEvents()
 
 						if( m_pGameServer->ClientConnect( szRejectReason, sizeof( szRejectReason ) ) )
 						{
-							bAssignedSlot = true;
-
 							printf( "Client connected\n" );
 
 							client.SendServerInfo( *this );
 						}
 						else
 						{
-							//TODO: send reject reason
-
-							disconnectReason = SVDisconnectCode::CONNECTION_REJECTED;
+							client.Disconnect( SVDisconnectCode::CONNECTION_REJECTED, szRejectReason );
 						}
 
 						break;
@@ -209,7 +207,7 @@ void CServer::ProcessNetworkEvents()
 
 				if( !bAssignedSlot )
 				{
-					enet_peer_disconnect( event.peer, disconnectReason );
+					NET::DisconnectWithReason( event.peer, SVDisconnectCode::NO_FREE_SLOTS );
 				}
 
 				break;
@@ -222,7 +220,7 @@ void CServer::ProcessNetworkEvents()
 					CSVClient* const pClient = reinterpret_cast<CSVClient*>( event.peer->data );
 
 					assert( ( pClient - m_pClients ) >= 0 && static_cast<size_t>( pClient - m_pClients ) < m_uiMaxClients );
-					assert( pClient->IsConnected() );
+					assert( pClient->IsConnected() || pClient->GetConnectionState() == SVClientConnState::PENDINGDISCONNECT );
 
 					printf( "server: Client disconnected\n" );
 
@@ -237,6 +235,8 @@ void CServer::ProcessNetworkEvents()
 		case ENET_EVENT_TYPE_RECEIVE:
 			{
 				ProcessPacket( *reinterpret_cast<CSVClient*>( event.peer->data ), event.packet );
+
+				enet_packet_destroy( event.packet );
 				break;
 			}
 		}
@@ -260,7 +260,10 @@ void CServer::SendNetTables()
 
 		if( client.IsFullyConnected() )
 		{
-			client.SendNetTableUpdates( m_NetStringTableManager );
+			if( client.SendNetTableUpdates( m_NetStringTableManager ) == NST::SerializeResult::OVERFLOW )
+			{
+				client.Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
+			}
 		}
 	}
 }
@@ -275,17 +278,24 @@ void CServer::DispatchClientMessages()
 		{
 			auto& buffer = client.GetMessageBuffer();
 
-			ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
-
-			buffer.ResetToStart();
-
-			if( enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) == 0 )
+			if( !buffer.HasOverflowed() )
 			{
-				client.SetLastMessageTime( WorldTime.GetCurrentTime() );
+				ENetPacket* pPacket = enet_packet_create( buffer.GetData(), buffer.GetBytesInBuffer(), ENET_PACKET_FLAG_RELIABLE );
+
+				buffer.ResetToStart();
+
+				if( enet_peer_send( client.GetPeer(), NetChannel::DATA, pPacket ) == 0 )
+				{
+					client.SetLastMessageTime( WorldTime.GetCurrentTime() );
+				}
+				else
+				{
+					printf( "Error while sending packet to client!\n" );
+				}
 			}
 			else
 			{
-				printf( "Error while sending packet to client!\n" );
+				client.Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
 			}
 		}
 	}

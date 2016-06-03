@@ -6,6 +6,8 @@
 #include "networking/shared/stringtable/INetworkStringTableManager.h"
 #include "CNetworkStringTable.h"
 
+#include "PrivateNetStringTableConstants.h"
+
 class CNetworkBuffer;
 
 /**
@@ -61,7 +63,7 @@ public:
 	*	Serializes all changes in all tables to the given buffer.
 	*	@return true if data was sent, false otherwise.
 	*/
-	bool Serialize( CNetworkBuffer& buffer, const float flTime );
+	NST::SerializeResult Serialize( CNetworkBuffer& buffer, const float flTime );
 
 	/**
 	*	Unserializes table data from the given buffer.

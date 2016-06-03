@@ -11,6 +11,8 @@
 
 #include "networking/CNetworkBuffer.h"
 
+#include "networking/stringtable/PrivateNetStringTableConstants.h"
+
 #undef SendMessage
 
 class CServer;
@@ -62,7 +64,7 @@ public:
 	/**
 	*	@return Whether this client is connected to this server in any way.
 	*/
-	bool IsConnected() const { return m_State == SVClientConnState::CONNECTING || m_State == SVClientConnState::CONNECTED || m_State == SVClientConnState::PENDINGDISCONNECT; }
+	bool IsConnected() const { return m_State == SVClientConnState::CONNECTING || m_State == SVClientConnState::CONNECTED; }
 
 	/**
 	*	@return Whether this client is fully connected. A fully connected client is playing the game.
@@ -122,6 +124,11 @@ public:
 	void Connected();
 
 	/**
+	*	Disconnects the client.
+	*/
+	void Disconnect( const SVDisconnectCode::SVDisconnectCode disconnectCode, const char* const pszReason = nullptr );
+
+	/**
 	*	Called when this client has disconnected.
 	*/
 	void Reset();
@@ -144,7 +151,7 @@ public:
 	/**
 	*	Send network string table updates to the client.
 	*/
-	void SendNetTableUpdates( CServerNetworkStringTableManager& manager );
+	NST::SerializeResult SendNetTableUpdates( CServerNetworkStringTableManager& manager );
 
 	/**
 	*	Process messages sent by this client.
@@ -158,13 +165,13 @@ private:
 	*	@param uiMessageSize Message size, in bytes.
 	*	@param buffer Buffer containing the message.
 	*/
-	void ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
+	bool ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
 
 	/**
 	*	Sends all network string tables to the client. Data is spread out over multiple messages if necessary, requiring multiple calls to this method.
 	*	@return true if data was sent, false otherwise.
 	*/
-	bool SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd );
+	NST::SerializeResult SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd );
 
 private:
 	SVClientConnState m_State = SVClientConnState::FREE;

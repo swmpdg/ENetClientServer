@@ -104,61 +104,68 @@ bool CGame::RunGameLoop()
 
 				CCommand command( m_szInput.c_str() );
 
-				if( strcmp( command.Arg( 0 ), "connect" ) == 0 && !m_Client.IsConnected() )
+				if( command.IsValid() )
 				{
-					printf( "Connecting to server..." );
-
-					fflush( stdout );
-
-					if( m_Client.ConnectToServer( "localhost", m_uiPort ) )
+					if( strcmp( command.Arg( 0 ), "connect" ) == 0 && !m_Client.IsConnected() )
 					{
-						printf( "Connection succeeded\n" );
-					}
-					else
-					{
-						printf( "Failed to connect to server\n" );
-						return false;
-					}
-				}
-				else if( strcmp( command.Arg( 0 ), "sendmessage" ) == 0 && m_Client.IsConnected() )
-				{
-					cl_sv_messages::ClientCmd cmd;
+						printf( "Connecting to server..." );
 
-					cmd.set_command( std::string( command.GetArgumentsString() ) + "\n" );
+						fflush( stdout );
 
-					if( m_Client.SendMessage( CLSVMessage::CLIENTCMD, cmd ) )
-					{
-						printf( "client: Sent message\n" );
-					}
-					else
-					{
-						printf( "client: Failed to send message\n" );
-					}
-				}
-				else if( strcmp( command.Arg( 0 ), "disconnect" ) == 0 && m_Client.IsConnected() )
-				{
-					m_Client.DisconnectFromServer();
-				}
-				else if( strcmp( command.Arg( 0 ), "finish" ) == 0 && !m_Client.IsConnected() )
-				{
-					printf( "Finished\n" );
-
-					m_bTerminate = true;
-				}
-				else
-				{
-					if( m_Client.IsConnected() )
-					{
-						if( !m_Client.ClientCommand( command ) )
+						if( m_Client.ConnectToServer( "localhost", m_uiPort ) )
 						{
+							printf( "Connection succeeded\n" );
+						}
+						else
+						{
+							printf( "Failed to connect to server\n" );
+							return false;
+						}
+					}
+					else if( strcmp( command.Arg( 0 ), "sendmessage" ) == 0 && m_Client.IsConnected() )
+					{
+						cl_sv_messages::ClientCmd cmd;
+
+						cmd.set_command( std::string( command.GetArgumentsString() ) + "\n" );
+
+						if( m_Client.SendMessage( CLSVMessage::CLIENTCMD, cmd ) )
+						{
+							printf( "client: Sent message\n" );
+						}
+						else
+						{
+							printf( "client: Failed to send message\n" );
+						}
+					}
+					else if( strcmp( command.Arg( 0 ), "disconnect" ) == 0 && m_Client.IsConnected() )
+					{
+						m_Client.DisconnectFromServer();
+					}
+					else if( strcmp( command.Arg( 0 ), "finish" ) == 0 && !m_Client.IsConnected() )
+					{
+						printf( "Finished\n" );
+
+						m_bTerminate = true;
+					}
+					else
+					{
+						if( m_Client.IsConnected() )
+						{
+							if( !m_Client.ClientCommand( command ) )
+							{
+								m_Server.ClientCommand( command );
+							}
+						}
+						else
+						{
+							//TODO: this shouldn't be here. These commands should be handled through the server console.
 							m_Server.ClientCommand( command );
 						}
 					}
-					else
-					{
-						//TODO: this shouldn't be here. These commands should be handled through the server console.
-						m_Server.ClientCommand( command );
-					}
+				}
+				else
+				{
+					printf( "Invalid command \"%s\"\n", m_szInput.c_str() );
 				}
 			}
 
@@ -184,9 +191,10 @@ void CGame::RunIO()
 		{
 			if( !m_bInputPending )
 			{
-				m_bInputPending = true;
-
 				std::getline( std::cin, m_szInput );
+
+				if( !m_szInput.empty() )
+					m_bInputPending = true;
 			}
 
 			m_IOMutex.unlock();

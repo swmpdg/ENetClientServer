@@ -48,14 +48,14 @@ public:
 	uint8_t* GetCurrentData() { return m_pData + GetBytesInBuffer(); }
 
 	size_t GetMaxBits() const { return m_uiMaxBits; }
-	size_t GetMaxBytes() const { return m_uiMaxBits >> 3; }
+	size_t GetMaxBytes() const { return BitByte( m_uiMaxBits ); }
 
 	size_t GetBitsInBuffer() const { return m_uiCurrentBit; }
 	size_t GetBytesInBuffer() const { return BitByte( m_uiCurrentBit ); }
-	size_t GetUnpaddedBytesInBuffer() const { return m_uiCurrentBit << 3; }
+	size_t GetUnpaddedBytesInBuffer() const { return BitByte( m_uiCurrentBit ); }
 
 	size_t GetBitsLeft() const { return m_uiMaxBits - m_uiCurrentBit; }
-	size_t GetBytesLeft() const { return GetBitsLeft() << 3; }
+	size_t GetBytesLeft() const { return BitByte( GetBitsLeft() ); }
 
 	/*
 	* This buffer is reset to an empty state

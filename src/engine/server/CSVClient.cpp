@@ -103,9 +103,19 @@ void CSVClient::Connected()
 	m_flLastNetTableTime = m_flConnectTime;
 }
 
+void CSVClient::Disconnect( const SVDisconnectCode::SVDisconnectCode disconnectCode, const char* const pszReason )
+{
+	if( !IsConnected() )
+		return;
+
+	NET::DisconnectWithReason( m_pPeer, disconnectCode, pszReason );
+
+	m_State = SVClientConnState::PENDINGDISCONNECT;
+}
+
 void CSVClient::Reset()
 {
-	assert( IsConnected() );
+	assert( IsConnected() || m_State == SVClientConnState::PENDINGDISCONNECT );
 	assert( m_pPeer );
 	assert( m_pPeer->data == this );
 
@@ -130,11 +140,13 @@ bool CSVClient::SendMessage( const CNetworkBuffer& buffer )
 	return m_MessageBuffer.WriteBits( buffer.GetData(), buffer.GetBitsInBuffer() );
 }
 
-void CSVClient::SendNetTableUpdates( CServerNetworkStringTableManager& manager )
+NST::SerializeResult CSVClient::SendNetTableUpdates( CServerNetworkStringTableManager& manager )
 {
-	manager.Serialize( GetMessageBuffer(), m_flLastNetTableTime );
+	const auto result = manager.Serialize( GetMessageBuffer(), m_flLastNetTableTime );
 
 	m_flLastNetTableTime = WorldTime.GetCurrentTime();
+
+	return result;
 }
 
 void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )
@@ -150,11 +162,12 @@ void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )
 
 		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( NETMSG_SIZE_BITS );
 
-		ProcessMessage( server, message, uiMessageSize, buffer );
+		if( !ProcessMessage( server, message, uiMessageSize, buffer ) )
+			break;
 	}
 }
 
-void CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
+bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
 {
 	switch( message )
 	{
@@ -209,13 +222,21 @@ void CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 
 			case ClientConnStage::NETTABLES:
 				{
-					if( !SendNetTables( server.GetNetStringTableManager(), connCmd ) )
+					const auto result = SendNetTables( server.GetNetStringTableManager(), connCmd );
+
+					if( result == NST::SerializeResult::WROTENOTHING )
 					{
 						m_ConnectionStage = ClientConnStage::NONE;
 
 						Connected();
 
 						server.GetGameServer()->ClientPutInServer();
+					}
+					else if( result == NST::SerializeResult::OVERFLOW )
+					{
+						Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
+
+						return false;
 					}
 
 					break;
@@ -227,9 +248,11 @@ void CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 	}
 
 	buffer.ReadAndDiscardBytes( uiMessageSize );
+
+	return true;
 }
 
-bool CSVClient::SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd )
+NST::SerializeResult CSVClient::SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd )
 {
 	size_t uiTable = 0;
 
@@ -243,18 +266,18 @@ bool CSVClient::SendNetTables( CServerNetworkStringTableManager& manager, const 
 		uiFirstString = state.stringindex();
 	}
 
-	bool bSent = false;
+	NST::SerializeResult result = NST::SerializeResult::WROTENOTHING;
 
 	while( manager.GetTableByIndex( uiTable ) )
 	{
-		bSent = manager.WriteBaseline( uiTable, uiFirstString, 0, GetMessageBuffer() );
+		result = manager.WriteBaseline( uiTable, uiFirstString, 0, GetMessageBuffer() );
 
-		if( bSent )
+		if( result != NST::SerializeResult::WROTENOTHING )
 			break;
 
 		++uiTable;
 		uiFirstString = 0;
 	}
 
-	return bSent;
+	return result;
 }

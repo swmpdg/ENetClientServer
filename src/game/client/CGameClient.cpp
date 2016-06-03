@@ -28,6 +28,10 @@ void CGameClient::OnNetworkStringTableCreated( const char* const pszName, INetwo
 	}
 }
 
+void CGameClient::ClientPutInServer()
+{
+}
+
 void CGameClient::ClientDisconnected( const bool bWasFullyConnected )
 {
 	printf( "client: Client disconnected\n" );

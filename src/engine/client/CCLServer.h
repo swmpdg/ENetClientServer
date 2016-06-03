@@ -28,6 +28,8 @@ enum class CLServerConnState
 	PENDINGDISCONNECT
 };
 
+class CClient;
+
 /**
 *	The client's representation of a server it's connected to.
 */
@@ -37,7 +39,7 @@ public:
 	/**
 	*	Constructor.
 	*/
-	CCLServer();
+	CCLServer( CClient& client );
 
 	/**
 	*	Destructor.
@@ -92,9 +94,14 @@ public:
 	const char* GetIPAddress() const { return m_szIPAddress; }
 
 	/**
-	*	This server's host name.
+	*	@return This server's host name.
 	*/
 	const char* GetHostName() const { return m_szHostName; }
+
+	/**
+	*	@return The last disconnect reason, if any.
+	*/
+	const char* GetDisconnectReason() const { return m_szDisconnectReason; }
 
 	/**
 	*	Initializes this server handler.
@@ -141,6 +148,8 @@ private:
 	void ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
 
 private:
+	CClient& m_Client;
+
 	CLServerConnState m_State = CLServerConnState::NOTCONNECTED;
 
 	ENetPeer* m_pPeer = nullptr;
@@ -154,6 +163,8 @@ private:
 	char m_szIPAddress[ MAX_BUFFER_LENGTH ] = { '\0' };
 
 	char m_szHostName[ MAX_BUFFER_LENGTH ] = { '\0' };
+
+	char m_szDisconnectReason[ MAX_BUFFER_LENGTH ] = { '\0' };
 
 private:
 	CCLServer( const CCLServer& ) = delete;

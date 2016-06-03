@@ -29,6 +29,13 @@ public:
 	virtual void OnNetworkStringTableCreated( const char* const pszName, INetworkStringTableManager& manager ) = 0;
 
 	/**
+	*	Called when the client has fully connected to the server.
+	*	TODO: should include a parameter that describes the server's basic info.
+	*	TODO: needs an object that represents the client.
+	*/
+	virtual void ClientPutInServer() = 0;
+
+	/**
 	*	Called when the client has disconnected from a server.
 	*	TODO: should include a parameter that describes the server's basic info.
 	*	@param bWasFullyConnected Whether the client was fully connected to the server, or still in the process of connecting.

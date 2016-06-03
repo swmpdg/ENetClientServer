@@ -87,7 +87,7 @@ void CNetworkStringTable::Clear()
 	m_flLastModifiedTime = WorldTime.GetCurrentTime();
 }
 
-bool CNetworkStringTable::Serialize( CNetworkBuffer& buffer, const float flTime, const size_t uiStart )
+NST::SerializeResult CNetworkStringTable::Serialize( CNetworkBuffer& buffer, const float flTime, const size_t uiStart, const bool bAllowOverflow )
 {
 	const float flCurrentTime = WorldTime.GetCurrentTime();
 
@@ -95,7 +95,8 @@ bool CNetworkStringTable::Serialize( CNetworkBuffer& buffer, const float flTime,
 
 	bool bFullySerialized = true;
 
-	uint8_t msgBuf[ MAX_DATAGRAM ];
+	//Use half a buffer worth at most.
+	uint8_t msgBuf[ MAX_DATAGRAM / 2 ];
 
 	CNetworkBuffer tempBuf( "CNetworkStringTable::Serialize_buffer", msgBuf, sizeof( msgBuf ) );
 
@@ -105,6 +106,13 @@ bool CNetworkStringTable::Serialize( CNetworkBuffer& buffer, const float flTime,
 
 		if( entry.flLastModifiedTime < flTime )
 			continue;
+
+		//If we can only write 1 more bit, we need to save it for the end of list bit.
+		if( tempBuf.CheckOverflow( 2 ) )
+		{
+			bFullySerialized = false;
+			break;
+		}
 
 		const size_t uiOffset = tempBuf.GetBitsInBuffer();
 
@@ -143,10 +151,14 @@ bool CNetworkStringTable::Serialize( CNetworkBuffer& buffer, const float flTime,
 
 		table.set_data( tempBuf.GetData(), tempBuf.GetBytesInBuffer() );
 
-		SerializeToBuffer( SVCLMessage::NETTABLE, table, buffer );
+		if( !SerializeToBuffer( SVCLMessage::NETTABLE, table, buffer ) )
+			return NST::SerializeResult::OVERFLOW;
 	}
 
-	return bWroteSomething;
+	if( !bAllowOverflow && !bFullySerialized )
+		return NST::SerializeResult::OVERFLOW;
+
+	return bWroteSomething ? NST::SerializeResult::WROTEDATA : NST::SerializeResult::WROTENOTHING;
 }
 
 bool CNetworkStringTable::Unserialize( CNetworkBuffer& buffer )

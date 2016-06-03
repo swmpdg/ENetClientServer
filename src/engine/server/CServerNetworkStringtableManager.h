@@ -17,7 +17,7 @@ public:
 	*/
 	void WriteNetTableCreateMessages( CNetworkBuffer& buffer );
 
-	bool WriteBaseline( const size_t uiTableIndex, const size_t uiStringIndex, const float flTime, CNetworkBuffer& buffer );
+	NST::SerializeResult WriteBaseline( const size_t uiTableIndex, const size_t uiStringIndex, const float flTime, CNetworkBuffer& buffer );
 
 private:
 	CServer* const m_pServer;

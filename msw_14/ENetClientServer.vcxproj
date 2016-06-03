@@ -107,6 +107,7 @@
     <ClCompile Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.cc" />
     <ClCompile Include="..\src\messages\Noop.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\ClientPrint.pb.cc" />
+    <ClCompile Include="..\src\messages\sv_cl_messages\Disconnect.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\FullyConnected.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\NetTable.pb.cc" />
     <ClCompile Include="..\src\messages\sv_cl_messages\NetTables.pb.cc" />
@@ -114,6 +115,7 @@
     <ClCompile Include="..\src\networking\CNetBufInputStream.cpp" />
     <ClCompile Include="..\src\networking\CNetBufOutputStream.cpp" />
     <ClCompile Include="..\src\networking\CNetworkBuffer.cpp" />
+    <ClCompile Include="..\src\networking\NetworkConstants.cpp" />
     <ClCompile Include="..\src\networking\NetworkUtils.cpp" />
     <ClCompile Include="..\src\networking\stringtable\CNetworkStringTable.cpp" />
     <ClCompile Include="..\src\networking\stringtable\CNetworkStringTableManager.cpp" />
@@ -143,6 +145,7 @@
     <ClInclude Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.h" />
     <ClInclude Include="..\src\messages\Noop.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\ClientPrint.pb.h" />
+    <ClInclude Include="..\src\messages\sv_cl_messages\Disconnect.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\FullyConnected.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTable.pb.h" />
     <ClInclude Include="..\src\messages\sv_cl_messages\NetTables.pb.h" />

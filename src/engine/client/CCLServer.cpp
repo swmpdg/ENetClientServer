@@ -10,13 +10,17 @@
 #include "messages/sv_cl_messages/ServerInfo.pb.h"
 #include "messages/sv_cl_messages/NetTables.pb.h"
 #include "messages/sv_cl_messages/NetTable.pb.h"
+#include "messages/sv_cl_messages/Disconnect.pb.h"
 
 #include "messages/cl_sv_messages/ConnectionCmd.pb.h"
 
+#include "CClient.h"
+
 #include "CCLServer.h"
 
-CCLServer::CCLServer()
-	: m_MessageBuffer( "ClientServerData", m_MessageBufData, sizeof( m_MessageBufData ) )
+CCLServer::CCLServer( CClient& client )
+	: m_Client( client )
+	, m_MessageBuffer( "ClientServerData", m_MessageBufData, sizeof( m_MessageBufData ) )
 {
 }
 
@@ -45,6 +49,8 @@ void CCLServer::Connected()
 	assert( m_State == CLServerConnState::CONNECTED );
 
 	m_State = CLServerConnState::FULLYCONNECTED;
+
+	m_Client.Connected();
 }
 
 void CCLServer::PendingDisconnect()
@@ -70,6 +76,7 @@ void CCLServer::Reset()
 
 	memset( m_szIPAddress, 0, sizeof( m_szIPAddress ) );
 	memset( m_szHostName, 0, sizeof( m_szHostName ) );
+	memset( m_szDisconnectReason, 0, sizeof( m_szDisconnectReason ) );
 }
 
 void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
@@ -202,6 +209,19 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 	case SVCLMessage::FULLYCONNECTED:
 		{
 			Connected();
+
+			break;
+		}
+
+	case SVCLMessage::DISCONNECT:
+		{
+			sv_cl_messages::Disconnect disconnect;
+
+			disconnect.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+
+			strncpy( m_szDisconnectReason, disconnect.reason().c_str(), sizeof( m_szDisconnectReason ) );
+
+			m_szDisconnectReason[ sizeof( m_szDisconnectReason ) - 1 ] = '\0';
 
 			break;
 		}
