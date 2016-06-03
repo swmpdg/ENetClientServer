@@ -60,3 +60,5 @@ external/*
 *.db
 *.iobj
 *.ipdb
+*.exp
+*.lib
