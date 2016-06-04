@@ -1,16 +1,12 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#ifndef CORE_PLATFORM_H
+#define CORE_PLATFORM_H
 
 #ifdef WIN32
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <Windows.h>
-
+//Undefine Windows header stuff.
 #undef GetCurrentTime
 #undef ARRAYSIZE
-
-#define MAX_PATH_LENGTH MAX_PATH
+#undef SendMessage
 
 #define strcasecmp _stricmp
 #define strncasecmp _strnicmp
@@ -25,11 +21,14 @@
 
 #error "Not implemented"
 
-#define MAX_PATH_LENGTH PATH_MAX
-
 #define DLLEXPORT __attribute__( ( visibility( "default" ) ) )
 #define DLLIMPORT
 
 #endif
 
-#endif //PLATFORM_H
+/**
+*	Cross-platform maximum file path length.
+*/
+extern const size_t MAX_PATH_LENGTH;
+
+#endif //CORE_PLATFORM_H

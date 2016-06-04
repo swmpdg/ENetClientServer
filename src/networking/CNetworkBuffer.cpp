@@ -224,7 +224,7 @@ void CNetworkBuffer::WriteShort( const int iValue )
 
 void CNetworkBuffer::WriteWord( const int iValue )
 {
-	WriteUnsignedBitLong( iValue, sizeof( unsigned char ) << 3 );
+	WriteUnsignedBitLong( iValue, sizeof( unsigned short ) << 3 );
 }
 
 void CNetworkBuffer::WriteLong( const int iValue )

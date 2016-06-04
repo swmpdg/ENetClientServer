@@ -3,6 +3,8 @@
 
 #include <enet/enet.h>
 
+#include "shared/Platform.h"
+
 #include "networking/CNetworkBuffer.h"
 
 #include "networking/NetworkUtils.h"
@@ -27,8 +29,6 @@
 #include "messages/cl_sv_messages/ConnectionCmd.pb.h"
 
 #include "CSVClient.h"
-
-#undef GetCurrentTime
 
 CSVClient::CSVClient()
 	: m_MessageBuffer( "ServerClientMessage", m_MessageBufData, sizeof( m_MessageBufData ) )
@@ -232,7 +232,7 @@ bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 
 						server.GetGameServer()->ClientPutInServer();
 					}
-					else if( result == NST::SerializeResult::OVERFLOW )
+					else if( result == NST::SerializeResult::OVERFLOWED )
 					{
 						Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
 

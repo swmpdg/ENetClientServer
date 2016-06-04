@@ -7,6 +7,12 @@
 #include "StringUtils.h"
 
 /**
+*	@ingroup Utility
+*
+*	@{
+*/
+
+/**
 *	String class that automatically manages memory
 *	Intended for use in containers
 */
@@ -185,6 +191,10 @@ inline int CAutoString::Compare( const char* pszString ) const
 
 namespace std
 {
+/**
+*	Hash functor for CAutoString.
+*	@see CAutoString
+*/
 template<>
 struct hash<CAutoString> : public std::unary_function<CAutoString, size_t>
 {
@@ -194,5 +204,7 @@ struct hash<CAutoString> : public std::unary_function<CAutoString, size_t>
 	}
 };
 }
+
+/** @} */
 
 #endif //UTILITY_CAUTOSTRING_H

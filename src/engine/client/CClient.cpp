@@ -1,6 +1,10 @@
 #include <cassert>
-
 #include <memory>
+
+#include <enet/enet.h>
+
+//Undefines Windows header stuff so it doesn't interfere.
+#include "shared/Platform.h"
 
 #include "networking/NetworkUtils.h"
 

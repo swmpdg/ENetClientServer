@@ -92,7 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\core\shared\Platform.cpp" />
-    <ClCompile Include="..\src\engine\CGame.cpp" />
+    <ClCompile Include="..\src\engine\CEngine.cpp" />
     <ClCompile Include="..\src\engine\client\CClient.cpp" />
     <ClCompile Include="..\src\engine\client\CClientNetworkStringTableManager.cpp" />
     <ClCompile Include="..\src\engine\client\CCLServer.cpp" />
@@ -127,8 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\shared\Platform.h" />
+    <ClInclude Include="..\src\core\shared\PlatformHeaders.h" />
     <ClInclude Include="..\src\core\shared\Utility.h" />
-    <ClInclude Include="..\src\engine\CGame.h" />
+    <ClInclude Include="..\src\enet\forward.h" />
+    <ClInclude Include="..\src\engine\CEngine.h" />
     <ClInclude Include="..\src\engine\client\CClient.h" />
     <ClInclude Include="..\src\engine\client\CClientNetworkStringTableManager.h" />
     <ClInclude Include="..\src\engine\client\CCLServer.h" />
@@ -140,6 +142,7 @@
     <ClInclude Include="..\src\game\shared\client\IGameClientInterface.h" />
     <ClInclude Include="..\src\game\shared\IBaseGameInterface.h" />
     <ClInclude Include="..\src\game\shared\server\IGameServerInterface.h" />
+    <ClInclude Include="..\src\google\protobuf\forward.h" />
     <ClInclude Include="..\src\lib\LibInterface.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ClientCmd.pb.h" />
     <ClInclude Include="..\src\messages\cl_sv_messages\ConnectionCmd.pb.h" />

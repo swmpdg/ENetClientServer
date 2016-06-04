@@ -127,6 +127,15 @@
     <Filter Include="Header Files\networking\shared\stringtable">
       <UniqueIdentifier>{6a746428-c15c-4893-a33d-590cc5dc47da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\enet">
+      <UniqueIdentifier>{2c49de81-84f6-4991-a2aa-b93bdf33e270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\google">
+      <UniqueIdentifier>{b16ab201-ed5f-45bf-9a95-36aad1c65e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\google\protobuf">
+      <UniqueIdentifier>{41ad1837-ffaa-4445-95ee-4abcdc1af55c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -186,9 +195,6 @@
     <ClCompile Include="..\src\engine\server\CSVClient.cpp">
       <Filter>Source Files\engine\server</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\engine\CGame.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\game\server\CGameServer.cpp">
       <Filter>Source Files\game\server</Filter>
     </ClCompile>
@@ -227,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="..\src\networking\NetworkConstants.cpp">
       <Filter>Source Files\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\CEngine.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,9 +302,6 @@
     <ClInclude Include="..\src\networking\NetworkConstants.h">
       <Filter>Header Files\networking</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\CGame.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\game\shared\server\IGameServerInterface.h">
       <Filter>Header Files\game\shared\server</Filter>
     </ClInclude>
@@ -355,6 +361,18 @@
     </ClInclude>
     <ClInclude Include="..\src\messages\sv_cl_messages\Disconnect.pb.h">
       <Filter>Header Files\messages\sv_cl_messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\enet\forward.h">
+      <Filter>Header Files\enet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\google\protobuf\forward.h">
+      <Filter>Header Files\google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\shared\PlatformHeaders.h">
+      <Filter>Header Files\core\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\CEngine.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

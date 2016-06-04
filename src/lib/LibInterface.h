@@ -1,8 +1,6 @@
 #ifndef LIB_LIBINTERFACE_H
 #define LIB_LIBINTERFACE_H
 
-#include <type_traits>
-
 #include "shared/Platform.h"
 
 /** @file */

@@ -11,6 +11,12 @@
 class CNetworkBuffer;
 
 /**
+*	@ingroup NetStringTable
+*
+*	@{
+*/
+
+/**
 *	Manages the list of network string tables.
 */
 class CNetworkStringTableManager : public INetworkStringTableManager
@@ -24,9 +30,6 @@ public:
 	*/
 	CNetworkStringTableManager() = default;
 
-	/**
-	*	Destructor.
-	*/
 	~CNetworkStringTableManager() = default;
 
 	size_t GetNumTables() const override final { return m_Tables.size(); }
@@ -80,5 +83,7 @@ private:
 	CNetworkStringTableManager( const CNetworkStringTableManager& ) = delete;
 	CNetworkStringTableManager& operator=( const CNetworkStringTableManager& ) = delete;
 };
+
+/** @} */
 
 #endif //UTILITY_CNETWORKSTRINGTABLEMANAGER_H

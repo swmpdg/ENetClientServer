@@ -6,11 +6,20 @@
 class INetworkStringTable;
 
 /**
+*	@ingroup NetStringTable
+*
+*	@{
+*/
+
+/**
 *	Manages the list of network string tables.
 */
 class INetworkStringTableManager
 {
 public:
+	/**
+	*	Destructor.
+	*/
 	virtual ~INetworkStringTableManager() = 0;
 
 	/**
@@ -52,5 +61,7 @@ public:
 inline INetworkStringTableManager::~INetworkStringTableManager()
 {
 }
+
+/** @} */
 
 #endif //NETWORKING_STRINGTABLE_INETWORKSTRINGTABLEMANAGER_H

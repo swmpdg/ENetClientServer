@@ -1,9 +1,9 @@
-#ifndef CCLSERVER_H
-#define CCLSERVER_H
+#ifndef ENGINE_CLIENT_CCLSERVER_H
+#define ENGINE_CLIENT_CCLSERVER_H
 
 #include <cstdint>
 
-#include <enet/enet.h>
+#include <enet/forward.h>
 
 #include "shared/Utility.h"
 
@@ -14,17 +14,40 @@
 #include "networking/stringtable/CNetworkStringTableManager.h"
 #include "CClientNetworkStringTableManager.h"
 
-#undef SendMessage
+/**
+*	@ingroup EngineClient
+*
+*	@{
+*/
 
 /**
 *	The client's server's connection state.
 */
 enum class CLServerConnState
 {
+	/**
+	*	Not connected to the server.
+	*/
 	NOTCONNECTED = 0,
+
+	/**
+	*	Currently connecting to the server, awaiting ENet response.
+	*/
 	CONNECTING,
+
+	/**
+	*	Connected, communicating serfer and client info.
+	*/
 	CONNECTED,
+
+	/**
+	*	Fully connected to the server.
+	*/
 	FULLYCONNECTED,
+
+	/**
+	*	Submitted disconnect request and awaiting response.
+	*/
 	PENDINGDISCONNECT
 };
 
@@ -171,4 +194,6 @@ private:
 	CCLServer& operator=( const CCLServer& ) = delete;
 };
 
-#endif //CCLSERVER_H
+/** @} */
+
+#endif //ENGINE_CLIENT_CCLSERVER_H

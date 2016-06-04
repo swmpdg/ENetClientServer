@@ -1,9 +1,13 @@
-#ifndef NETWORKING_STRINGTABLE_PRIVATE_NETSTRINGTABLECONSTANTS_H
-#define NETWORKING_STRINGTABLE_PRIVATE_NETSTRINGTABLECONSTANTS_H
+#ifndef NETWORKING_STRINGTABLE_PRIVATENETSTRINGTABLECONSTANTS_H
+#define NETWORKING_STRINGTABLE_PRIVATENETSTRINGTABLECONSTANTS_H
 
 #include "networking/shared/stringtable/NetStringTableConstants.h"
 
-#undef OVERFLOW
+/**
+*	@ingroup NetStringTable
+*
+*	@{
+*/
 
 namespace NetStringTable
 {
@@ -29,12 +33,28 @@ inline TableID_t IndexToTableID( const size_t uiIndex )
 	return uiIndex + 1;
 }
 
+/**
+*	Data serialization results.
+*/
 enum class SerializeResult
 {
+	/**
+	*	Data was written.
+	*/
 	WROTEDATA = 0,
+
+	/**
+	*	No data was written.
+	*/
 	WROTENOTHING,
-	OVERFLOW
+
+	/**
+	*	Buffer overflow occurred during writing.
+	*/
+	OVERFLOWED
 };
 }
 
-#endif //NETWORKING_STRINGTABLE_PRIVATE_NETSTRINGTABLECONSTANTS_H
+/** @} */
+
+#endif //NETWORKING_STRINGTABLE_PRIVATENETSTRINGTABLECONSTANTS_H

@@ -1,19 +1,17 @@
-#ifndef CSVCLIENT_H
-#define CSVCLIENT_H
+#ifndef ENGINE_SERVER_CSVCLIENT_H
+#define ENGINE_SERVER_CSVCLIENT_H
 
 #include <cstdint>
 
-#include <enet/enet.h>
+#include <enet/forward.h>
 
-#include <google/protobuf/message.h>
+#include <google/protobuf/forward.h>
 
 #include "networking/NetworkConstants.h"
 
 #include "networking/CNetworkBuffer.h"
 
 #include "networking/stringtable/PrivateNetStringTableConstants.h"
-
-#undef SendMessage
 
 class CServer;
 
@@ -25,13 +23,34 @@ class ConnectionCmd;
 }
 
 /**
+*	@ingroup EngineServer
+*
+*	@{
+*/
+
+/**
 *	The server's client's connection state.
 */
 enum class SVClientConnState
 {
+	/**
+	*	The client is free to be assigned to a connecting client.
+	*/
 	FREE = 0,
+
+	/**
+	*	The client is currently connecting to the server. Server and client info is being exchanged.
+	*/
 	CONNECTING,
+
+	/**
+	*	The client is fully connected.
+	*/
 	CONNECTED,
+
+	/**
+	*	A disconnect request has been issued for this client, and is pending disconnection.
+	*/
 	PENDINGDISCONNECT
 };
 
@@ -105,6 +124,9 @@ public:
 		m_flLastMessageTime = flLastMessageTime;
 	}
 
+	/**
+	*	@return Last time network string tables were updated.
+	*/
 	float GetLastNetTableTime() const { return m_flLastNetTableTime; }
 
 	/**
@@ -198,4 +220,6 @@ private:
 	CSVClient& operator=( const CSVClient& ) = delete;
 };
 
-#endif //CSVCLIENT_H
+/** @ } */
+
+#endif //ENGINE_SERVER_CSVCLIENT_H

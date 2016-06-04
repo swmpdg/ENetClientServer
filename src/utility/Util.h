@@ -4,6 +4,12 @@
 #include "CHashStringPool.h"
 
 /**
+*	@defgroup Utility Utility functionality.
+*
+*	@{
+*/
+
+/**
 *	Global string pool.
 */
 extern CHashStringPool g_StringPool;
@@ -27,5 +33,7 @@ double GetCurrentTime();
 *	@return Number of common characters.
 */
 size_t UTIL_FindCommonBaseCount( const char* pszString1, const char* pszString2 );
+
+/** @} */
 
 #endif //UTILITY_UTIL_H

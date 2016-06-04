@@ -1,9 +1,9 @@
-#ifndef CSERVER_H
-#define CSERVER_H
+#ifndef ENGINE_SERVER_CSERVER_H
+#define ENGINE_SERVER_CSERVER_H
 
-#include <enet/enet.h>
+#include <enet/forward.h>
 
-#include <google/protobuf/message.h>
+#include <google/protobuf/forward.h>
 
 #include "networking/NetworkConstants.h"
 
@@ -12,14 +12,17 @@
 
 #include "lib/LibInterface.h"
 
-//Windows
-#undef SendMessage
-
 class CSVClient;
 
 class IGameServerInterface;
 
 class CCommand;
+
+/**
+*	@defgroup EngineServer Engine Server systems.
+*
+*	@{
+*/
 
 /**
 *	The server's representation of itself.
@@ -162,4 +165,6 @@ private:
 	CServer& operator=( const CServer& ) = delete;
 };
 
-#endif //CSERVER_H
+/** @} */
+
+#endif //ENGINE_SERVER_CSERVER_H

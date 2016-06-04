@@ -6,7 +6,7 @@
 
 #include "networking/CNetworkBuffer.h"
 
-#include "engine/CGame.h"
+#include "engine/CEngine.h"
 
 int main( int iArgc, char* pszArgV[] )
 {
@@ -21,17 +21,17 @@ int main( int iArgc, char* pszArgV[] )
 		CNetworkBuffer::InitMasks();
 
 		{
-			CGame game;
+			CEngine engine;
 
-			//Initialize the game and run the game loop.
+			//Initialize the engine and run the game loop.
 			//Use port 1234 for the server port.
-			if( game.Initialize( 1234 ) )
+			if( engine.Initialize( 1234 ) )
 			{
-				bSuccess = game.Run();
+				bSuccess = engine.Run();
 			}
 
-			//Shut down the game.
-			game.Shutdown();
+			//Shut down the engine.
+			engine.Shutdown();
 		}
 
 		//Release protobuf memory.

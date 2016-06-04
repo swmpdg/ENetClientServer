@@ -5,9 +5,21 @@
 
 class INetworkStringTable;
 
+/**
+*	@ingroup GameServer
+*
+*	@{
+*/
+
+/**
+*	Game server interface implementation.
+*/
 class CGameServer final : public IGameServerInterface
 {
 public:
+	/**
+	*	Constructor.
+	*/
 	CGameServer() = default;
 
 	void CreateNetworkStringTables( INetworkStringTableManager& manager ) override final;
@@ -29,5 +41,7 @@ private:
 	CGameServer( const CGameServer& ) = delete;
 	CGameServer& operator=( const CGameServer& ) = delete;
 };
+
+/** @} */
 
 #endif //GAME_SERVER_CGAMESERVER_H

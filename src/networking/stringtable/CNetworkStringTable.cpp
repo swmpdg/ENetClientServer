@@ -17,8 +17,6 @@
 
 #include "CNetworkStringTable.h"
 
-#undef GetCurrentTime
-
 CNetworkStringTable::CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID, const size_t uiMaxEntries )
 	: m_pszName( pszName )
 	, m_TableID( tableID )
@@ -196,11 +194,11 @@ NST::SerializeResult CNetworkStringTable::Serialize( CNetworkBuffer& buffer, con
 		table.set_data( tempBuf.GetData(), tempBuf.GetBytesInBuffer() );
 
 		if( !SerializeToBuffer( SVCLMessage::NETTABLE, table, buffer ) )
-			return NST::SerializeResult::OVERFLOW;
+			return NST::SerializeResult::OVERFLOWED;
 	}
 
 	if( !bAllowOverflow && !bFullySerialized )
-		return NST::SerializeResult::OVERFLOW;
+		return NST::SerializeResult::OVERFLOWED;
 
 	return bWroteSomething ? NST::SerializeResult::WROTEDATA : NST::SerializeResult::WROTENOTHING;
 }

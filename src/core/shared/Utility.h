@@ -1,5 +1,5 @@
-#ifndef COMMON_UTILITY_H
-#define COMMON_UTILITY_H
+#ifndef CORE_UTILITY_H
+#define CORE_UTILITY_H
 
 #include <algorithm>
 #include <cstdint>
@@ -29,4 +29,4 @@ constexpr inline size_t _ArraySizeof( T( &)[ SIZE ] )
 
 #define MAX_BUFFER_LENGTH 512
 
-#endif //COMMON_UTILITY_H
+#endif //CORE_UTILITY_H

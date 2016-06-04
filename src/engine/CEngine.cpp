@@ -11,11 +11,9 @@
 #include "shared/Utility.h"
 #include "utility/CCommand.h"
 
-#include "CGame.h"
+#include "CEngine.h"
 
-#undef GetCurrentTime
-
-bool CGame::Initialize( const enet_uint16 uiPort )
+bool CEngine::Initialize( const enet_uint16 uiPort )
 {
 	m_uiPort = uiPort;
 
@@ -61,7 +59,7 @@ bool CGame::Initialize( const enet_uint16 uiPort )
 	return true;
 }
 
-void CGame::Shutdown()
+void CEngine::Shutdown()
 {
 	if( m_Client.IsInitialized() )
 	{
@@ -78,12 +76,12 @@ void CGame::Shutdown()
 	}
 }
 
-bool CGame::Run()
+bool CEngine::Run()
 {
 	return RunGameLoop();
 }
 
-bool CGame::RunGameLoop()
+bool CEngine::RunGameLoop()
 {
 	printf( "Running\n" );
 
@@ -184,12 +182,12 @@ bool CGame::RunGameLoop()
 	return true;
 }
 
-void CGame::IOThread( CGame* pGame )
+void CEngine::IOThread( CEngine* pEngine )
 {
-	pGame->RunIO();
+	pEngine->RunIO();
 }
 
-void CGame::RunIO()
+void CEngine::RunIO()
 {
 	while( !m_bTerminate )
 	{

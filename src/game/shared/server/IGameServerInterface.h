@@ -8,6 +8,12 @@ class INetworkStringTableManager;
 class CCommand;
 
 /**
+*	@defgroup GameServer Game Server systems
+*
+*	@{
+*/
+
+/**
 *	Server game library main interface.
 */
 class IGameServerInterface : public IBaseGameInterface
@@ -50,6 +56,11 @@ public:
 	virtual bool ClientCommand( const CCommand& command ) = 0;
 };
 
+/**
+*	Game server interface name.
+*/
 #define IGAMESERVERINTERFACE_NAME "IGAMESERVERINTERFACEV001"
+
+/** @} */
 
 #endif //GAME_SERVER_IGAMESERVERINTERFACE_H

@@ -1,9 +1,15 @@
-#ifndef NETWORKCONSTANTS_H
-#define NETWORKCONSTANTS_H
+#ifndef NETWORKING_NETWORKCONSTANTS_H
+#define NETWORKING_NETWORKCONSTANTS_H
 
 #include <cstdint>
 
-#include <enet/enet.h>
+#include <enet/types.h>
+
+/**
+*	@ingroup Networking
+*
+*	@{
+*/
 
 namespace NetChannel
 {
@@ -182,4 +188,6 @@ const size_t MAX_DATAGRAM = 80000;
 */
 const size_t NETMSG_SIZE_BITS = 32;
 
-#endif //NETWORKCONSTANTS_H
+/** @} */
+
+#endif //NETWORKING_NETWORKCONSTANTS_H

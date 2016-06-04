@@ -5,9 +5,25 @@
 
 #include "CNetworkBuffer.h"
 
+/**
+*	@ingroup Networking
+*
+*	@{
+*/
+
+/**
+*	Zero copy input stream designed to interface with CNetworkBuffer.
+*	@see google::protobuf::io::ZeroCopyInputStream
+*	@see CNetworkBuffer
+*/
 class CNetBufInputStream final : public google::protobuf::io::ZeroCopyInputStream
 {
 public:
+	/**
+	*	Constructor.
+	*	@param buffer Buffer to read from.
+	*	@param uiMessageSize Size of the message to read from the buffer.
+	*/
 	CNetBufInputStream( CNetworkBuffer& buffer, const size_t uiMessageSize )
 		: m_Buffer( buffer )
 		, m_uiMessageSize( uiMessageSize )
@@ -32,5 +48,7 @@ private:
 	CNetBufInputStream( const CNetBufInputStream& ) = delete;
 	CNetBufInputStream& operator=( const CNetBufInputStream& ) = delete;
 };
+
+/** @} */
 
 #endif //UTILITY_CNETBUFINPUTSTREAM_H

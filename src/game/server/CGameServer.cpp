@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
 
 #include "networking/shared/stringtable/INetworkStringTableManager.h"
 #include "networking/shared/stringtable/INetworkStringTable.h"

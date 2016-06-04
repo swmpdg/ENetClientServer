@@ -1,7 +1,11 @@
 #ifndef COMMON_CWORLDTIME_H
 #define COMMON_CWORLDTIME_H
 
-#undef GetCurrentTime
+/**
+*	@ingroup Utility
+*
+*	@{
+*/
 
 /**
 *	Represents the time in the world. Multiple time values are tracked.
@@ -76,6 +80,11 @@ private:
 	double m_flPrevRealTime = 0.0f;
 };
 
+/**
+*	World time global instance.
+*/
 extern CWorldTime WorldTime;
+
+/** @} */
 
 #endif //COMMON_CWORLDTIME_H

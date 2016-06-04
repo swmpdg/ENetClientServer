@@ -1,5 +1,9 @@
 #include <cassert>
 
+#include <enet/enet.h>
+
+#include <google/protobuf/message.h>
+
 #include "networking/CNetworkBuffer.h"
 
 #include "networking/NetworkUtils.h"

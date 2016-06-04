@@ -5,9 +5,21 @@
 
 class INetworkStringTable;
 
+/**
+*	@ingroup GameClient
+*
+*	@{
+*/
+
+/**
+*	Game client interface implementation.
+*/
 class CGameClient final : public IGameClientInterface
 {
 public:
+	/**
+	*	Constructor.
+	*/
 	CGameClient() = default;
 
 	bool ClientConnected() override final;
@@ -28,5 +40,7 @@ private:
 	CGameClient( const CGameClient& ) = delete;
 	CGameClient& operator=( const CGameClient& ) = delete;
 };
+
+/** @} */
 
 #endif //GAME_CLIENT_CGAMECLIENT_H

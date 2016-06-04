@@ -1,60 +1,66 @@
-#ifndef CGAME_H
-#define CGAME_H
+#ifndef ENGINE_CENGINE_H
+#define ENGINE_CENGINE_H
 
 #include <atomic>
 #include <mutex>
 #include <string>
 
-#include <enet/enet.h>
+#include <enet/types.h>
 
 #include "engine/server/CServer.h"
 #include "engine/client/CClient.h"
 
 /**
-*	The game's representation of itself.
+*	@defgroup Engine Engine systems
+*
+*	@{
 */
-class CGame final
+
+/**
+*	The engine's representation of itself.
+*/
+class CEngine final
 {
 public:
 	/**
 	*	Constructor.
 	*/
-	CGame() = default;
+	CEngine() = default;
 
 	/**
 	*	Destructor.
 	*/
-	~CGame() = default;
+	~CEngine() = default;
 
 	/**
-	*	Initializes the game.
+	*	Initializes the engine.
 	*	@param uiPort The port that the server listens on.
 	*	@return true on success, false otherwise.
 	*/
 	bool Initialize( const enet_uint16 uiPort );
 
 	/**
-	*	Shuts down the game. Must be called even if Initialize returned false.
+	*	Shuts down the engine. Must be called even if Initialize returned false.
 	*/
 	void Shutdown();
 
 	/**
-	*	Runs the game loop.
+	*	Runs the engine loop.
 	*	@return true on success, false otherwise.
 	*/
 	bool Run();
 
 private:
 	/**
-	*	Runs the main game loop.
+	*	Runs the main engine game loop.
 	*/
 	bool RunGameLoop();
 
 	/**
 	*	Entry point for the IO thread.
-	*	@param pGame Game instance.
+	*	@param pEngine Engine instance.
 	*/
-	static void IOThread( CGame* pGame );
+	static void IOThread( CEngine* pEngine );
 
 	/**
 	*	IO thread main loop.
@@ -75,8 +81,10 @@ private:
 	bool m_bInputPending = false;
 
 private:
-	CGame( const CGame& ) = delete;
-	CGame& operator=( const CGame& ) = delete;
+	CEngine( const CEngine& ) = delete;
+	CEngine& operator=( const CEngine& ) = delete;
 };
 
-#endif //CGAME_H
+/** @} */
+
+#endif //ENGINE_CENGINE_H

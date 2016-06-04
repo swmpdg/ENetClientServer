@@ -1,21 +1,22 @@
-#ifndef CCLIENT_H
-#define CCLIENT_H
+#ifndef ENGINE_CLIENT_CCLIENT_H
+#define ENGINE_CLIENT_CCLIENT_H
 
-#include <enet/enet.h>
+#include <enet/forward.h>
 
-#include <google/protobuf/message.h>
-
-#include "networking/CNetworkBuffer.h"
+#include <google/protobuf/forward.h>
 
 #include "CCLServer.h"
 
 #include "lib/LibInterface.h"
 
-//Windows define
-#undef SendMessage
-
 class IGameClientInterface;
 class CCommand;
+
+/**
+*	@defgroup EngineClient Engine Client systems.
+*
+*	@{
+*/
 
 /**
 *	The client's representation of itself.
@@ -146,4 +147,6 @@ private:
 	CClient& operator=( const CClient& ) = delete;
 };
 
-#endif //CCLIENT_H
+/** @} */
+
+#endif //ENGINE_CLIENT_CCLIENT_H

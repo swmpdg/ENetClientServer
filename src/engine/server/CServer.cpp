@@ -2,6 +2,10 @@
 #include <cstdio>
 #include <memory>
 
+#include <enet/enet.h>
+
+#include "shared/Platform.h"
+
 #include "networking/NetworkConstants.h"
 
 #include "networking/CNetworkBuffer.h"
@@ -260,7 +264,7 @@ void CServer::SendNetTables()
 
 		if( client.IsFullyConnected() )
 		{
-			if( client.SendNetTableUpdates( m_NetStringTableManager ) == NST::SerializeResult::OVERFLOW )
+			if( client.SendNetTableUpdates( m_NetStringTableManager ) == NST::SerializeResult::OVERFLOWED )
 			{
 				client.Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
 			}

@@ -1,5 +1,9 @@
 #include <cstdint>
 
+#include <enet/enet.h>
+
+#include <google/protobuf/message.h>
+
 #include "CNetworkBuffer.h"
 
 #include "CNetBufOutputStream.h"
@@ -38,8 +42,6 @@ namespace NET
 void DisconnectWithReason( ENetPeer* pPeer, const SVDisconnectCode::SVDisconnectCode disconnectCode, const char* const pszReason )
 {
 	assert( pPeer );
-
-	//TODO: send reason
 
 	if( pszReason && *pszReason )
 	{

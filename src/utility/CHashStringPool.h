@@ -6,6 +6,12 @@
 #include "CAutoString.h"
 
 /**
+*	@ingroup Utility
+*
+*	@{
+*/
+
+/**
 *	A string pool that stores strings in a hash map. Efficiently manages the given strings, ensuring no copying occurs.
 */
 class CHashStringPool final
@@ -57,5 +63,7 @@ private:
 	CHashStringPool( const CHashStringPool& ) = delete;
 	CHashStringPool& operator=( const CHashStringPool& ) = delete;
 };
+
+/** @} */
 
 #endif //UTILITY_CHASHSTRINGPOOL_H

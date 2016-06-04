@@ -4,11 +4,20 @@
 #include "NetStringTableConstants.h"
 
 /**
+*	@ingroup NetStringTable
+*
+*	@{
+*/
+
+/**
 *	Represents an indexed table of strings that can be networked between a server and all connected clients.
 */
 class INetworkStringTable
 {
 public:
+	/**
+	*	Destructor.
+	*/
 	virtual ~INetworkStringTable() = 0;
 
 	/**
@@ -78,5 +87,7 @@ public:
 inline INetworkStringTable::~INetworkStringTable()
 {
 }
+
+/** @} */
 
 #endif //NETWORKING_STRINGTABLE_INETWORKSTRINGTABLE_H

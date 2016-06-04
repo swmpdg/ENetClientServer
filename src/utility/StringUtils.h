@@ -4,6 +4,12 @@
 #include <cstdlib>
 #include <cstring>
 
+/**
+*	@ingroup Utility
+*
+*	@{
+*/
+
 /*
 * String hashing function
 * Ripped from the MSVC std::hash<std::string> implementation
@@ -22,5 +28,7 @@ inline std::size_t StringHash( const char* pszString )
 		_Val = 16777619U * _Val ^ ( size_t ) pszString[ _First ];
 	return ( _Val );
 }
+
+/** @} */
 
 #endif //UTILITY_STRINGUTILS_H

@@ -5,12 +5,28 @@
 
 #include "CNetworkBuffer.h"
 
+/**
+*	@ingroup Networking
+*
+*	@{
+*/
+
+/**
+*	Zero copy output stream designed to interface with CNetworkBuffer.
+*	@see google::protobuf::io::ZeroCopyOutputStream
+*	@see CNetworkBuffer
+*/
 class CNetBufOutputStream final : public google::protobuf::io::ZeroCopyOutputStream
 {
 public:
 	static const size_t DEFAULT_CHUNK_SIZE = 1024;
 
 public:
+	/**
+	*	Constructor.
+	*	@param buffer Buffer that will be written to.
+	*	@param uiChunkSize Size of the chunks to give to the output stream. Larger chunks may allow for fewer calls.
+	*/
 	CNetBufOutputStream( CNetworkBuffer& buffer, const size_t uiChunkSize = DEFAULT_CHUNK_SIZE )
 		: m_Buffer( buffer )
 		, m_uiChunkSize( uiChunkSize > 0 ? uiChunkSize : DEFAULT_CHUNK_SIZE )
@@ -33,5 +49,7 @@ private:
 	CNetBufOutputStream( const CNetBufOutputStream& ) = delete;
 	CNetBufOutputStream& operator=( const CNetBufOutputStream& ) = delete;
 };
+
+/** @} */
 
 #endif //UTILITY_CNETBUFOUTPUTSTREAM_H

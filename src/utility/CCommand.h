@@ -2,6 +2,12 @@
 #define UTILITY_CCOMMAND_H
 
 /**
+*	@ingroup Utility
+*
+*	@{
+*/
+
+/**
 *	Contains command arguments.
 */
 class CCommand final
@@ -166,5 +172,7 @@ private:
 	*/
 	char* m_pArgV[ MAX_TOKENS ];
 };
+
+/** @} */
 
 #endif //UTILITY_CCOMMAND_H

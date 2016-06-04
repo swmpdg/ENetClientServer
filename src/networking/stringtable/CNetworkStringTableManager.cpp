@@ -13,8 +13,6 @@
 
 #include "CNetworkStringTableManager.h"
 
-#undef GetCurrentTime
-
 const CNetworkStringTable* CNetworkStringTableManager::GetTableByIndex( const size_t uiIndex ) const
 {
 	if( m_Tables.size() <= uiIndex )
@@ -109,9 +107,9 @@ NST::SerializeResult CNetworkStringTableManager::Serialize( CNetworkBuffer& buff
 		{
 			result = NST::SerializeResult::WROTEDATA;
 		}
-		else if( tblResult == NST::SerializeResult::OVERFLOW )
+		else if( tblResult == NST::SerializeResult::OVERFLOWED )
 		{
-			return NST::SerializeResult::OVERFLOW;
+			return NST::SerializeResult::OVERFLOWED;
 		}
 	}
 

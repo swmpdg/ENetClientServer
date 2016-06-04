@@ -10,6 +10,12 @@
 class CNetworkBuffer;
 
 /**
+*	@ingroup NetStringTable
+*
+*	@{
+*/
+
+/**
 *	A table of strings that can be networked between the server and all clients.
 */
 class CNetworkStringTable final : public INetworkStringTable
@@ -21,7 +27,7 @@ private:
 	struct TableEntry_t
 	{
 		/**
-		*	Pointer to externally managed memory. Lifetime matches the map's.
+		*	Pointer to externally managed memory. Lifetime must match or exceed the map's.
 		*/
 		const char* pszString = nullptr;
 
@@ -32,9 +38,13 @@ private:
 	typedef std::vector<TableEntry_t> TableEntries_t;
 
 	/**
-	*	The number of bits to use to represent common string sequences.
+	*	The number of bits to use to represent common string sequence lengths.
 	*/
 	static const size_t NUM_COMMON_BITS = 5;
+
+	/**
+	*	Bit mask to use for common string sequence lengths.
+	*/
 	static const size_t COMMON_BITS_MASK = ( 1 << NUM_COMMON_BITS ) - 1;
 
 public:
@@ -43,9 +53,6 @@ public:
 	*/
 	CNetworkStringTable( const char* const pszName, const NST::TableID_t tableID, const size_t uiMaxEntries );
 
-	/**
-	*	Destructor.
-	*/
 	~CNetworkStringTable() = default;
 
 	const char* GetName() const override final { return m_pszName; }
@@ -123,5 +130,7 @@ private:
 	CNetworkStringTable( const CNetworkStringTable& ) = delete;
 	CNetworkStringTable& operator=( const CNetworkStringTable& ) = delete;
 };
+
+/** @} */
 
 #endif //UTILITY_CNETWORKSTRINGTABLE_H

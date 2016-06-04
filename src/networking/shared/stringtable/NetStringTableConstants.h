@@ -3,6 +3,12 @@
 
 class INetworkStringTable;
 
+/**
+*	@defgroup NetStringTable Network String Table
+*
+*	@{
+*/
+
 namespace NetStringTable
 {
 /**
@@ -33,5 +39,7 @@ using StringAddedCallback = void ( * )( void* pObject, INetworkStringTable* pTab
 *	Short alias for the NetStringTable namespace.
 */
 namespace NST = NetStringTable;
+
+/** @} */
 
 #endif //NETWORKING_STRINGTABLE_NETSTRINGTABLECONSTANTS_H
