@@ -118,7 +118,7 @@ public:
 	bool operator!=( const char* pszString ) const { return Compare( pszString ) != 0; }
 
 	/**
-	*	@copydoc operator!=( const CAutoString& other ) const
+	*	@copydoc operator!=( const char* pszString ) const
 	*/
 	bool operator!=( const CAutoString& other ) const { return Compare( other.m_pszString ) != 0; }
 

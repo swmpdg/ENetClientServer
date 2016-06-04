@@ -94,6 +94,7 @@ public:
 	*	@param buffer Buffer to serialize to.
 	*	@param flTime Used for change detection.
 	*	@param uiStart Index to start at.
+	*	@param bAllowOverflow Whether to allow overflows in the internal buffer. If the buffer provided by the buffer parameter overflows, it will still return OVERFLOWED.
 	*	@return true if any data was written, false otherwise.
 	*/
 	NST::SerializeResult Serialize( CNetworkBuffer& buffer, const float flTime, const size_t uiStart = 0, const bool bAllowOverflow = false );

@@ -62,3 +62,4 @@ external/*
 *.ipdb
 *.exp
 *.lib
+docs/*

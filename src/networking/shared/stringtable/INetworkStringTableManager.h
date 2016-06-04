@@ -34,7 +34,7 @@ public:
 	virtual const INetworkStringTable* GetTableByIndex( const size_t uiIndex ) const = 0;
 
 	/**
-	*	@copydoc GetTable( const size_t uiIndex ) const
+	*	@copydoc GetTableByIndex( const size_t uiIndex ) const
 	*/
 	virtual INetworkStringTable* GetTableByIndex( const size_t uiIndex ) = 0;
 
