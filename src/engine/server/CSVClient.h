@@ -186,8 +186,9 @@ private:
 	*	@param message Message ID.
 	*	@param uiMessageSize Message size, in bytes.
 	*	@param buffer Buffer containing the message.
+	*	@return Process result.
 	*/
-	bool ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
+	ProcessResult ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
 
 	/**
 	*	Sends all network string tables to the client. Data is spread out over multiple messages if necessary, requiring multiple calls to this method.

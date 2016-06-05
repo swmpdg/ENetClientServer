@@ -88,8 +88,9 @@ public:
 
 	/**
 	*	If connected to a server, disconnects from the server.
+	*	@param disconnectCode Disconnect code to provide.
 	*/
-	void DisconnectFromServer();
+	void DisconnectFromServer( const CLDisconnectCode::CLDisconnectCode disconnectCode = CLDisconnectCode ::USER_DISCONNECTED );
 
 	/**
 	*	Sends a message to the server.

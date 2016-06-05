@@ -51,6 +51,11 @@ enum CLDisconnectCode : enet_uint32
 	*	The user disconnected from the server.
 	*/
 	USER_DISCONNECTED,
+
+	/**
+	*	A bad message was received.
+	*/
+	BAD_MESSAGE,
 };
 }
 
@@ -82,6 +87,9 @@ enum SVDisconnectCode : enet_uint32
 	RELIABLE_CHANNEL_OVERFLOW,
 };
 
+/**
+*	@return A string representation of the disconnect code.
+*/
 const char* ToString( const SVDisconnectCode code );
 }
 
@@ -112,9 +120,14 @@ enum class ClientConnStage : uint8_t
 enum class CLSVMessage : uint8_t
 {
 	/**
+	*	Maps to the first message ID.
+	*/
+	_FIRST = 0,
+
+	/**
 	*	End of messages.
 	*/
-	NONE = 0,
+	NONE = _FIRST,
 
 	/**
 	*	Does nothing, just keeps connection alive.
@@ -130,7 +143,22 @@ enum class CLSVMessage : uint8_t
 	*	A connection command. Used to indicate successful receipt of data.
 	*/
 	CONNECTIONCMD,
+
+	/**
+	*	Maps to the last message ID.
+	*/
+	_LAST = CONNECTIONCMD,
+
+	/**
+	*	Number of messages. Must be last.
+	*/
+	_COUNT
 };
+
+/**
+*	@return A string representation of a client-to-server message ID.
+*/
+const char* CLSVMessageToString( const CLSVMessage message );
 
 /**
 *	Server to Client messages.
@@ -138,9 +166,14 @@ enum class CLSVMessage : uint8_t
 enum class SVCLMessage : uint8_t
 {
 	/**
+	*	Maps to the first message ID.
+	*/
+	_FIRST = 0,
+
+	/**
 	*	End of messages.
 	*/
-	NONE = 0,
+	NONE = _FIRST,
 
 	/**
 	*	Does nothing, just keeps connection alive.
@@ -176,7 +209,22 @@ enum class SVCLMessage : uint8_t
 	*	Message explaining disconnect.
 	*/
 	DISCONNECT,
+
+	/**
+	*	Maps to the last message ID.
+	*/
+	_LAST = DISCONNECT,
+
+	/**
+	*	Number of messages. Must be last.
+	*/
+	_COUNT
 };
+
+/**
+*	@return A string representation of a server-to-client message ID.
+*/
+const char* SVCLMessageToString( const SVCLMessage message );
 
 /**
 *	Maximum amount of data that can be stored in a buffer at any point in time.
@@ -187,6 +235,32 @@ const size_t MAX_DATAGRAM = 80000;
 *	Number of bits used to represent the size parameter of a network message.
 */
 const size_t NETMSG_SIZE_BITS = 32;
+
+/**
+*	ProcessMessage result types.
+*/
+enum class ProcessResult : uint8_t
+{
+	/**
+	*	Message successfully processed.
+	*/
+	SUCCESS = 0,
+
+	/**
+	*	Deserialization failure.
+	*/
+	DESERIALIZE_FAILURE,
+
+	/**
+	*	An unknown message was encountered.
+	*/
+	UNKNOWN_MESSAGE,
+
+	/**
+	*	Message successfully deserialized, but exit condition reached.
+	*/
+	EXIT
+};
 
 /** @} */
 

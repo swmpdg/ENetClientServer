@@ -34,6 +34,13 @@ double GetCurrentTime();
 */
 size_t UTIL_FindCommonBaseCount( const char* pszString1, const char* pszString2 );
 
+#define __STRINGIZE( str ) #str
+
+/**
+*	Converts str into a string.
+*/
+#define STRINGIZE( str ) __STRINGIZE( str )
+
 /** @} */
 
 #endif //UTILITY_UTIL_H

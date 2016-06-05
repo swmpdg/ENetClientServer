@@ -167,8 +167,9 @@ private:
 	*	@param message Message ID.
 	*	@param uiMessageSize Size of the message, in bytes.
 	*	@param buffer Buffer containing the message.
+	*	@return Process result.
 	*/
-	void ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
+	ProcessResult ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer );
 
 private:
 	CClient& m_Client;

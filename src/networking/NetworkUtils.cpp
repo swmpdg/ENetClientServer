@@ -7,6 +7,7 @@
 #include "CNetworkBuffer.h"
 
 #include "CNetBufOutputStream.h"
+#include "CNetBufInputStream.h"
 
 #include "messages/sv_cl_messages/Disconnect.pb.h"
 
@@ -31,6 +32,19 @@ bool SerializeToBuffer( const int iMessageId, const google::protobuf::Message& m
 	if( buffer.HasOverflowed() )
 	{
 		printf( "Message buffer overflowed\n" );
+		return false;
+	}
+
+	return true;
+}
+
+bool DeserializeFromBuffer( CNetworkBuffer& buffer, const size_t uiMessageSize, google::protobuf::Message& message )
+{
+	CNetBufInputStream stream( buffer, uiMessageSize );
+
+	if( !message.ParseFromBoundedZeroCopyStream( &stream, static_cast<int>( uiMessageSize ) ) )
+	{
+		printf( "Failed to deserialize message!\n" );
 		return false;
 	}
 

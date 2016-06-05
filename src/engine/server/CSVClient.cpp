@@ -25,6 +25,7 @@
 #include "messages/sv_cl_messages/ServerInfo.pb.h"
 #include "messages/sv_cl_messages/FullyConnected.pb.h"
 
+#include "messages/Noop.pb.h"
 #include "messages/cl_sv_messages/ClientCmd.pb.h"
 #include "messages/cl_sv_messages/ConnectionCmd.pb.h"
 
@@ -162,17 +163,38 @@ void CSVClient::ProcessMessages( CServer& server, CNetworkBuffer& buffer )
 
 		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( NETMSG_SIZE_BITS );
 
-		if( !ProcessMessage( server, message, uiMessageSize, buffer ) )
-			break;
+		const auto result = ProcessMessage( server, message, uiMessageSize, buffer );
+
+		switch( result )
+		{
+		case ProcessResult::DESERIALIZE_FAILURE:
+			{
+				printf( "Encountered bad message %s (%u, %u bytes)\n", CLSVMessageToString( message ), message, uiMessageSize );
+				return;
+			}
+
+		case ProcessResult::UNKNOWN_MESSAGE:
+			{
+				printf( "CSVClient::ProcessMessage: Invalid message %s (%u)\n", CLSVMessageToString( message ), message );
+				return;
+			}
+
+		case ProcessResult::EXIT: return;
+		}
 	}
 }
 
-bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
+ProcessResult CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
 {
 	switch( message )
 	{
 	case CLSVMessage::NOOP:
 		{
+			messages::Noop noop;
+
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, noop ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
+
 			break;
 		}
 
@@ -180,7 +202,8 @@ bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 		{
 			cl_sv_messages::ClientCmd cmd;
 
-			cmd.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, cmd ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			//TODO: handle client command
 			printf( "from client: %s", cmd.command().c_str() );
@@ -202,7 +225,8 @@ bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 		{
 			cl_sv_messages::ConnectionCmd connCmd;
 
-			connCmd.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, connCmd ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			const auto connStage = static_cast<ClientConnStage>( connCmd.stage() );
 
@@ -236,7 +260,7 @@ bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 					{
 						Disconnect( SVDisconnectCode::RELIABLE_CHANNEL_OVERFLOW );
 
-						return false;
+						return ProcessResult::EXIT;
 					}
 
 					break;
@@ -245,11 +269,14 @@ bool CSVClient::ProcessMessage( CServer& server, const CLSVMessage message, cons
 
 			break;
 		}
+
+	default:
+		{
+			return ProcessResult::UNKNOWN_MESSAGE;
+		}
 	}
 
-	buffer.ReadAndDiscardBytes( uiMessageSize );
-
-	return true;
+	return ProcessResult::SUCCESS;
 }
 
 NST::SerializeResult CSVClient::SendNetTables( CServerNetworkStringTableManager& manager, const cl_sv_messages::ConnectionCmd& connCmd )

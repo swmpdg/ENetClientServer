@@ -10,10 +10,13 @@
 
 #include "networking/stringtable/PrivateNetStringTableConstants.h"
 
+#include "messages/Noop.pb.h"
+
 #include "messages/sv_cl_messages/ClientPrint.pb.h"
 #include "messages/sv_cl_messages/ServerInfo.pb.h"
 #include "messages/sv_cl_messages/NetTables.pb.h"
 #include "messages/sv_cl_messages/NetTable.pb.h"
+#include "messages/sv_cl_messages/FullyConnected.pb.h"
 #include "messages/sv_cl_messages/Disconnect.pb.h"
 
 #include "messages/cl_sv_messages/ConnectionCmd.pb.h"
@@ -97,7 +100,28 @@ void CCLServer::ProcessMessages( CNetworkBuffer& buffer )
 
 		const size_t uiMessageSize = buffer.ReadUnsignedBitLong( NETMSG_SIZE_BITS );
 
-		ProcessMessage( message, uiMessageSize, buffer );
+		const auto result = ProcessMessage( message, uiMessageSize, buffer );
+
+		switch( result )
+		{
+		case ProcessResult::DESERIALIZE_FAILURE:
+			{
+				printf( "Encountered bad message %s (%u, %u bytes)\n", SVCLMessageToString( message ), message, uiMessageSize );
+				m_Client.DisconnectFromServer( CLDisconnectCode::BAD_MESSAGE );
+				return;
+			}
+
+		case ProcessResult::UNKNOWN_MESSAGE:
+			{
+				printf( "CCLServer::ProcessMessage: Invalid message %s (%u)\n", SVCLMessageToString( message ), message );
+				return;
+			}
+
+		case ProcessResult::EXIT:
+			{
+				return;
+			}
+		}
 	}
 }
 
@@ -108,12 +132,17 @@ bool CCLServer::SendMessage( const CLSVMessage messageId, google::protobuf::Mess
 	return SerializeToBuffer( messageId, message, m_MessageBuffer );
 }
 
-void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
+ProcessResult CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessageSize, CNetworkBuffer& buffer )
 {
 	switch( message )
 	{
 	case SVCLMessage::NOOP:
 		{
+			messages::Noop noop;
+
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, noop ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
+
 			break;
 		}
 
@@ -121,7 +150,8 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 		{
 			sv_cl_messages::ClientPrint print;
 
-			print.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, print ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			switch( print.type() )
 			{
@@ -141,7 +171,8 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 		{
 			sv_cl_messages::ServerInfo serverInfo;
 
-			serverInfo.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, serverInfo ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			strncpy( m_szIPAddress, serverInfo.ipaddress().c_str(), sizeof( m_szIPAddress ) );
 
@@ -164,7 +195,8 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 		{
 			sv_cl_messages::NetTables tables;
 
-			tables.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, tables ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			m_NetworkStringTableManager.ProcessNetTablesMessage( tables );
 
@@ -181,7 +213,8 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 		{
 			sv_cl_messages::NetTable table;
 
-			table.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, table ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			m_NetworkStringTableManager.ProcessNetTableMessage( table );
 
@@ -212,6 +245,11 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 
 	case SVCLMessage::FULLYCONNECTED:
 		{
+			sv_cl_messages::FullyConnected conn;
+
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, conn ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
+
 			Connected();
 
 			break;
@@ -221,7 +259,8 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 		{
 			sv_cl_messages::Disconnect disconnect;
 
-			disconnect.ParseFromArray( buffer.GetCurrentData(), uiMessageSize );
+			if( !DeserializeFromBuffer( buffer, uiMessageSize, disconnect ) )
+				return ProcessResult::DESERIALIZE_FAILURE;
 
 			strncpy( m_szDisconnectReason, disconnect.reason().c_str(), sizeof( m_szDisconnectReason ) );
 
@@ -232,10 +271,9 @@ void CCLServer::ProcessMessage( const SVCLMessage message, const size_t uiMessag
 
 	default:
 		{
-			printf( "CCLServer::ProcessMessage: Invalid message %d\n", message );
-			break;
+			return ProcessResult::UNKNOWN_MESSAGE;
 		}
 	}
 
-	buffer.ReadAndDiscardBytes( uiMessageSize );
+	return ProcessResult::SUCCESS;
 }

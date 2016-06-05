@@ -24,6 +24,8 @@ class CNetworkBuffer;
 */
 bool SerializeToBuffer( const int iMessageId, const google::protobuf::Message& message, CNetworkBuffer& buffer );
 
+bool DeserializeFromBuffer( CNetworkBuffer& buffer, const size_t uiMessageSize, google::protobuf::Message& message );
+
 /**
 *	@copydoc SerializeToBuffer( const int iMessageId, const google::protobuf::Message& message, CNetworkBuffer& buffer )
 */

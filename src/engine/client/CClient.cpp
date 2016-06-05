@@ -105,14 +105,16 @@ void CClient::Connected()
 	printf( "Connected to server %s(%s)\n", m_Server.GetHostName(), m_Server.GetIPAddress() );
 }
 
-void CClient::DisconnectFromServer()
+void CClient::DisconnectFromServer( const CLDisconnectCode::CLDisconnectCode disconnectCode )
 {
 	if( !IsConnected() )
 	{
 		return;
 	}
 
-	enet_peer_disconnect( m_Server.GetPeer(), CLDisconnectCode::USER_DISCONNECTED );
+	//TODO: there is no way to tell the difference between client and server disconnects. Should add a way.
+
+	enet_peer_disconnect( m_Server.GetPeer(), disconnectCode );
 
 	m_Server.PendingDisconnect();
 }
